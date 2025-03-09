@@ -10,17 +10,20 @@ CONFIG += c++17
 
 SOURCES += \
     adddatafile.cpp \
+    dataanalyze.cpp \
     datamanager.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     adddatafile.h \
+    dataanalyze.h \
     datamanager.h \
     mainwindow.h
 
 FORMS += \
     adddatafile.ui \
+    dataanalyze.ui \
     mainwindow.ui
 
 # TRANSLATIONS += \

@@ -101,12 +101,32 @@
     </property>
     <addaction name="action"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Инструменты</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="action_4"/>
+    <addaction name="action_5"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action">
    <property name="text">
-    <string>Открыть</string>
+    <string>Добавить данные с файла</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Анализ данных</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>Графики</string>
    </property>
   </action>
  </widget>

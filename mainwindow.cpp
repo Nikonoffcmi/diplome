@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "adddatafile.h"
+#include "dataanalyze.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -81,34 +82,6 @@ MainWindow::MainWindow(QWidget *parent)
                 auto widget = ui->horizontalLayout->itemAt(index)->widget();
                 widget->setMaximumWidth(new_size - 5);
             });
-    // //При клацанье на заголовок секции открывать вижет сортировки
-    // connect(ui->tableView->horizontalHeader(), &QHeaderView::sectionClicked, [this](int section) {
-    //     QHeaderView* headerView = ui->tableView->horizontalHeader();
-    //     QWidget* sortWidget = new QWidget(this, Qt::Popup);
-    //     sortWidget->setAttribute(Qt::WA_TranslucentBackground);
-    //     sortWidget->setStyleSheet("background-color: rgba(255, 255, 255, 128);"
-    //                               "color: white;");
-    //     QHBoxLayout* lo = new QHBoxLayout(sortWidget);
-    //     QLineEdit* le = new QLineEdit(sortWidget);
-    //     connect(le, &QLineEdit::textChanged, [this](const QString& toSort) {
-    //         //TODO вызываем логику сортировки
-    //     });
-    //     lo->addWidget(le);
-    //     sortWidget->setLayout(lo);
-    //     sortWidget->resize(headerView->sectionSize(section), 30);
-    //     sortWidget->show();
-    //     const auto sx = section * headerView->sectionSize(section) + (this->pos().x() + ui->tableView->pos().x());
-    //     const auto sy = this->pos().y() + ui->tableView->pos().y();
-    //     sortWidget->move(sx, sy);
-    // });
-
-    const QColor hlClr = Qt::red; // highlight color to set
-    const QColor txtClr = Qt::black; // highlighted text color to set
-
-    QPalette p = ui->tableView->palette();
-    p.setColor(QPalette::Highlight, hlClr);
-    p.setColor(QPalette::HighlightedText, txtClr);
-    ui->tableView->setPalette(p);
 }
 
 MainWindow::~MainWindow()
@@ -129,22 +102,6 @@ QWidget *MainWindow::create_filter_widget_by_scanning_column(const int &column) 
         filModel->set_filter(column, text);
     });
     return widget;
-    // switch (column) {
-    // case 0: {
-
-    // }
-    // case 1: {
-    //     auto widget = new QLineEdit();
-    //     widget->setValidator(new QRegularExpressionValidator(QRegularExpression(".*")));
-
-    //     // Подключаем сигнал textChanged к слоту set_filter
-    //     connect(widget, &QLineEdit::textChanged, this, [this, column](const QString &text) {
-    //         filModel->set_filter(column, text);
-    //     });
-    //     return widget;
-    // }
-    // default: return nullptr;
-    // }
 }
 
 
@@ -200,5 +157,12 @@ void MainWindow::on_action_triggered()
 void MainWindow::on_pushButton_clicked()
 {
     close();
+}
+
+
+void MainWindow::on_action_4_triggered()
+{
+    DataAnalyze* DADialog = new DataAnalyze(this);
+    DADialog->show();
 }
 
