@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Приминить</string>
+    <string>Добавить</string>
    </property>
   </widget>
   <widget class="QTableView" name="tableView">

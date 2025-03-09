@@ -68,7 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     filModel->setHeaderData(6, Qt::Horizontal, "Должность");
     filModel->setHeaderData(7, Qt::Horizontal, "Фамилия, имя");
 
-    db.close();
 
 
     for (int i = 0; i < filModel->columnCount(); i++) {
@@ -114,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    db.close();
     delete model;
     delete filModel;
     delete ui;

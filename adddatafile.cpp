@@ -7,13 +7,14 @@
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 
-using namespace QXlsx;
 
 AddDataFile::AddDataFile(QWidget *parent, QSqlDatabase db)
     : QDialog(parent)
     , ui(new Ui::AddDataFile)
+    , tableModel(new QStandardItemModel(this))
 {
     ui->setupUi(this);
+    ui->tableView->setModel(tableModel);
 
     ui->lineEditDevice->installEventFilter(this);
     ui->lineEditDeviceSerial->installEventFilter(this);
@@ -21,17 +22,20 @@ AddDataFile::AddDataFile(QWidget *parent, QSqlDatabase db)
     ui->lineEditProductSerial->installEventFilter(this);
     ui->lineEditInspector->installEventFilter(this);
 
-    QString fileFilter = "All file (*.*) ;; Text File (*.txt) ;; Excel (*.xlsx) ;; CSV (*.csv)";
+    QString fileFilter = " CSV (*.csv);;Text File (*.txt);;Excel (*.xlsx);;All file (*.*) ";
     QString file_name = QFileDialog::getOpenFileName(this, "Открыть файл", "", fileFilter);
-    if (file_name == nullptr) {
+    if (file_name.isEmpty()) {
         m_operationSuccessful = false;
         return;
     }
-    excelModel = new QStandardItemModel(this);
-    ui->tableView->setModel(excelModel);
+    dataModel = new QStandardItemModel(this);
+    ui->tableView->setModel(dataModel);
 
-    // Загружаем данные из Excel-файла
-    loadDataFromExcel(file_name);
+    if (file_name.endsWith(".xlsx")) {
+        loadExcelFile(file_name);
+    } else {
+        loadTextFile(file_name);
+    }
 
     m_dataManager.loadData();
     setupCompleters();
@@ -48,40 +52,96 @@ void AddDataFile::on_CloseBtn_clicked()
     close();
 }
 
-void AddDataFile::loadDataFromExcel(const QString &filePath) {
-    // Открываем Excel-файл
-    Document xlsx(filePath);
-    if (!xlsx.load()) {
-        qWarning() << "Failed to load file:" << filePath;
+void AddDataFile::loadTextFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Ошибка", "Файл не открывается");
         return;
     }
 
-    // Получаем активный лист
-    QString sheetName = xlsx.sheetNames().first();
-    xlsx.selectSheet(sheetName);
+    dataModel->clear();
+    QTextStream in(&file);
+    QString delimiter = ",";
 
-    // Читаем данные из листа
-    int rowCount = 0;
-    int colCount = 0;
+    // Автоопределение разделителя
+    QString firstLine = in.readLine();
+    if (firstLine.contains("\t")) delimiter = "\t";
+    else if (firstLine.contains(";")) delimiter = ";";
+    else if (firstLine.contains(",")) delimiter = ",";
+    in.seek(0);
 
-    // Определяем количество строк и столбцов
-    while (!xlsx.read(rowCount + 1, 1).isNull()) rowCount++;
-    while (!xlsx.read(1, colCount + 1).isNull()) colCount++;
+    int row = 0;
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        if (line.isEmpty()) continue;
 
-    // Устанавливаем заголовки столбцов
-    for (int col = 0; col < colCount; ++col) {
-        QVariant header = xlsx.read(1, col + 1);
-        excelModel->setHorizontalHeaderItem(col, new QStandardItem(header.toString()));
-    }
+        QStringList fields = line.split(delimiter);
 
-    // Заполняем модель данными
-    for (int row = 1; row < rowCount; ++row) {
-        for (int col = 0; col < colCount; ++col) {
-            QVariant cellData = xlsx.read(row + 1, col + 1);
-            QStandardItem *item = new QStandardItem(cellData.toString());
-            excelModel->setItem(row - 1, col, item);
+        if (row == 0) {
+            dataModel->setHorizontalHeaderLabels(fields);
+        } else {
+            QList<QStandardItem*> items;
+            for (const QString& field : fields) {
+                items.append(new QStandardItem(field));
+            }
+            dataModel->appendRow(items);
         }
+        row++;
     }
+    file.close();
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
+}
+
+void AddDataFile::loadExcelFile(const QString &fileName)
+{
+    using namespace QXlsx;
+    Document xlsx(fileName);
+    if (!xlsx.isLoadPackage()) {
+        QMessageBox::critical(this, "Ошибка", "Файл Ecxel не открывается");
+        return;
+    }
+
+    dataModel->clear();
+    Worksheet* worksheet = xlsx.currentWorksheet();
+
+    int row = 1;
+    int col = 1;
+    bool hasHeader = true;
+
+    // Чтение заголовков
+    if (hasHeader) {
+        QStringList headers;
+        auto cell = worksheet->cellAt(row, col);
+        while (cell) {
+            headers << cell->value().toString();
+            col++;
+            cell = worksheet->cellAt(row, col);
+        }
+        dataModel->setHorizontalHeaderLabels(headers);
+        row++;
+    }
+
+    // Чтение данных
+    row = hasHeader ? 2 : 1;
+    while (true) {
+        auto cell = worksheet->cellAt(row, 1);
+        if (!cell) break;
+
+        QList<QStandardItem*> items;
+        col = 1;
+        while (true) {
+            auto cell = worksheet->cellAt(row, col);
+            if (!cell) break;
+
+            items.append(new QStandardItem(cell->value().toString()));
+            col++;
+        }
+        dataModel->appendRow(items);
+        row++;
+    }
+
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);;
 }
 
 void AddDataFile::setupCompleters()
@@ -316,4 +376,84 @@ bool AddDataFile::eventFilter(QObject *obj, QEvent *event)
         }
     }
     return QDialog::eventFilter(obj, event);
+}
+
+void AddDataFile::on_AccBtn_clicked()
+{
+    // Получаем данные из LineEdit
+    QVariantList lineEditData = {
+        searchDataDB(ui->lineEditDeviceSerial->text(), "measuring_device", "device_code"),
+        searchDataDB(ui->lineEditProductSerial->text(), "product", "product_code")
+    };
+
+    // Получаем выбранные строки из TableView
+    QModelIndexList selected = ui->tableView->selectionModel()->selectedRows();
+
+    if (selected.isEmpty()) {
+        QMessageBox::warning(this, "Ошибка", "Не выбраны сторки из таблицы!");
+        return;
+    }
+
+    // Перебираем выбранные строки
+    foreach (const QModelIndex &index, selected) {
+        int row = index.row();
+        // Получаем данные из 3 колонок таблицы
+        QVariantList tableData = {
+            ui->tableView->model()->index(row,0).data().toString(),
+            ui->tableView->model()->index(row,1).data().toString(),
+            searchDataDB(ui->tableView->model()->index(row,2).data().toString(), "measuring_point", "measuring_point")
+        };
+
+        // Объединяем данные
+        QVariantList allData = lineEditData + tableData;
+
+        // Вставляем в БД
+        if (!insertIntoDatabase(allData)) {
+            QMessageBox::critical(this, "Ощибка", "Не получилось добавить данные в базу данных!");
+            return;
+        }
+    }
+
+    QMessageBox::information(this, "Успех", "Данные дабавленные в базу данных!");
+
+}
+
+bool AddDataFile::insertIntoDatabase(const QVariantList &data)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO measurement"
+                  "(id_measuring_device, id_product, value_measurement, datetime, id_measurement_point, measurement_number)"
+                  "VALUES (?, ?, ?, ?, ?, 1)");
+
+    for (const QVariant &value : data) {
+        query.addBindValue(value);
+    }
+
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Database Error", query.lastError().text());
+        return false;
+    }
+    return true;
+}
+
+QString AddDataFile::searchDataDB(const QString &data, const QString &dataTable, const QString &dataWhere)
+{
+    QSqlQuery query;
+    QString sqlreq = QString("SELECT id FROM %1 WHERE %2 = ?").arg(dataTable).arg(dataWhere);
+    query.prepare(sqlreq);
+
+    query.addBindValue(data);
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Database Error", query.lastError().text());
+        return {}; // Возвращаем пустую строку вместо nullptr
+    }
+
+    // Добавляем проверку наличия результатов
+    if (query.next()) {
+        return query.value(0).toString();
+    } else {
+        QMessageBox::warning(this, "Warning",
+                             QString("Данные не найдены: %1 в таблице %2").arg(data).arg(dataTable));
+        return {};
+    }
 }

@@ -18,6 +18,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QItemSelectionModel>
 
 namespace Ui {
 class AddDataFile;
@@ -38,8 +41,6 @@ public:
         }
     }
 
-    void loadDataFromExcel(const QString &filePath);
-
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -58,15 +59,23 @@ private slots:
     void onInstrumentSerialSelected(const QString &text);
     void onProductSerialSelected(const QString &text);
 
+    void on_AccBtn_clicked();
+
 private:
     Ui::AddDataFile *ui;
+    QStandardItemModel *tableModel;
     bool m_operationSuccessful = true;
-    QStandardItemModel *excelModel;
+    QStandardItemModel *dataModel;
+    void loadTextFile(const QString &fileName);
+    void loadExcelFile(const QString &fileName);
 
     DataManager m_dataManager;
 
     void setupCompleters();
     void connectSignals();
+
+    bool insertIntoDatabase(const QVariantList &data);
+    QString searchDataDB(const QString &data, const QString &dataTable, const QString &dataWhere);
 };
 
 #endif // ADDDATAFILE_H
