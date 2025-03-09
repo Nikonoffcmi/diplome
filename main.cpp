@@ -9,10 +9,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QFile styleSheetFile("./Integrid.qss");
-    styleSheetFile.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(styleSheetFile.readAll());
-    a.setStyleSheet(styleSheet);
+    // QFile styleSheetFile("./Integrid.qss");
+    // styleSheetFile.open(QFile::ReadOnly);
+    // QString styleSheet = QLatin1String(styleSheetFile.readAll());
+    // a.setStyleSheet(styleSheet);
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

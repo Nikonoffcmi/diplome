@@ -18,6 +18,7 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 #include <QFile>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -51,6 +52,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     QWidget* create_filter_widget_by_scanning_column(const int &column) const;
+
+private slots:
+    void on_action_triggered();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

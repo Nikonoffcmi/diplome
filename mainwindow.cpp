@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "adddatafile.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -102,6 +102,14 @@ MainWindow::MainWindow(QWidget *parent)
     //     const auto sy = this->pos().y() + ui->tableView->pos().y();
     //     sortWidget->move(sx, sy);
     // });
+
+    const QColor hlClr = Qt::red; // highlight color to set
+    const QColor txtClr = Qt::black; // highlighted text color to set
+
+    QPalette p = ui->tableView->palette();
+    p.setColor(QPalette::Highlight, hlClr);
+    p.setColor(QPalette::HighlightedText, txtClr);
+    ui->tableView->setPalette(p);
 }
 
 MainWindow::~MainWindow()
@@ -179,3 +187,18 @@ bool ScanningFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sou
     // Если все фильтры пройдены, строка отображается
     return true;
 }
+
+void MainWindow::on_action_triggered()
+{
+    AddDataFile* addDataFileDialog = new AddDataFile(this);
+    addDataFileDialog->show();
+
+}
+
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    close();
+}
+
