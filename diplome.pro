@@ -1,6 +1,6 @@
 QT       += core gui axcontainer
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql charts
 
 CONFIG += c++17
 
@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     adddatafile.cpp \
     dataanalyze.cpp \
+    datacharts.cpp \
     datamanager.cpp \
     main.cpp \
     mainwindow.cpp
@@ -18,12 +19,14 @@ SOURCES += \
 HEADERS += \
     adddatafile.h \
     dataanalyze.h \
+    datacharts.h \
     datamanager.h \
     mainwindow.h
 
 FORMS += \
     adddatafile.ui \
     dataanalyze.ui \
+    datacharts.ui \
     mainwindow.ui
 
 # TRANSLATIONS += \

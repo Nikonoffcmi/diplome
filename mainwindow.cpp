@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "adddatafile.h"
 #include "dataanalyze.h"
+#include "datacharts.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -164,5 +165,12 @@ void MainWindow::on_action_4_triggered()
 {
     DataAnalyze* DADialog = new DataAnalyze(this);
     DADialog->show();
+}
+
+
+void MainWindow::on_action_5_triggered()
+{
+    DataCharts * DCDialog = new DataCharts(this);
+    DCDialog->show();
 }
 
