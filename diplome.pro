@@ -1,4 +1,4 @@
-QT       += core gui axcontainer
+QT       += core gui axcontainer serialport printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql charts
 
@@ -10,24 +10,30 @@ CONFIG += c++17
 
 SOURCES += \
     adddatafile.cpp \
+    comportadd.cpp \
     dataanalyze.cpp \
     datacharts.cpp \
     datamanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    reportcreate.cpp
 
 HEADERS += \
     adddatafile.h \
+    comportadd.h \
     dataanalyze.h \
     datacharts.h \
     datamanager.h \
-    mainwindow.h
+    mainwindow.h \
+    reportcreate.h
 
 FORMS += \
     adddatafile.ui \
+    comportadd.ui \
     dataanalyze.ui \
     datacharts.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    reportcreate.ui
 
 # TRANSLATIONS += \
 #     diplome_ru_RU.ts

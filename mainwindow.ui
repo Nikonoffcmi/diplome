@@ -102,18 +102,10 @@
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Данные</string>
+     <string>Файл</string>
     </property>
     <addaction name="action"/>
-   </widget>
-   <widget class="QMenu" name="menu_2">
-    <property name="title">
-     <string>Инструменты</string>
-    </property>
-    <addaction name="separator"/>
-    <addaction name="separator"/>
-    <addaction name="action_4"/>
-    <addaction name="action_5"/>
+    <addaction name="action_2"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -136,16 +128,15 @@
     </property>
    </widget>
    <addaction name="menu"/>
-   <addaction name="menu_2"/>
-   <addaction name="menu_3"/>
    <addaction name="menu_4"/>
+   <addaction name="menu_3"/>
    <addaction name="menu_5"/>
    <addaction name="menu_6"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action">
    <property name="text">
-    <string>Добавить данные с файла</string>
+    <string>Открать файл</string>
    </property>
   </action>
   <action name="action_4">
@@ -156,6 +147,11 @@
   <action name="action_5">
    <property name="text">
     <string>Графики</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Загрузить с устройства</string>
    </property>
   </action>
  </widget>

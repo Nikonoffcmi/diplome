@@ -382,8 +382,8 @@ void AddDataFile::on_AccBtn_clicked()
 {
     // Получаем данные из LineEdit
     QVariantList lineEditData = {
-        searchDataDB(ui->lineEditDeviceSerial->text(), "measuring_device", "device_code"),
-        searchDataDB(ui->lineEditProductSerial->text(), "product", "product_code")
+        searchDataDB(ui->lineEditDeviceSerial->text(), "measuring_device", "device_serial"),
+        searchDataDB(ui->lineEditProductSerial->text(), "product", "product_serial")
     };
 
     // Получаем выбранные строки из TableView

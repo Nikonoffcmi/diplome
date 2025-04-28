@@ -8,9 +8,11 @@ DataManager::DataManager(QObject *parent) : QObject(parent) {}
 void DataManager::loadData()
 {
     // Загрузка приборов
-    QSqlQuery instrumentQuery("SELECT MDM.name, MD.device_code FROM protective_layer.measuring_device MD\
+    QSqlQuery instrumentQuery("SELECT MDM.name, MD.device_serial FROM measuring_device MD \
+        JOIN measurement_characteristics MC \
+        ON MD.id_characteristics = MC.id_measurement_characteristics \
         JOIN measuring_device_model MDM \
-        ON MD.id_device_model = MDM.id;");
+        ON MC.id_measuring_device_model = MDM.id_measuring_device_model;");
     while (instrumentQuery.next()) {
         QString name = instrumentQuery.value(0).toString();
         QString serial = instrumentQuery.value(1).toString();
@@ -20,9 +22,9 @@ void DataManager::loadData()
     }
 
     // Загрузка изделий
-    QSqlQuery productQuery("SELECT PD.name, P.product_code FROM protective_layer.product P\
+    QSqlQuery productQuery("SELECT PD.name, P.product_serial FROM product P\
         JOIN product_type PD \
-        ON P.id_product_type = PD.id;");
+        ON P.id_product_type = PD.id_product_type;");
     while (productQuery.next()) {
         QString name = productQuery.value(0).toString();
         QString serial = productQuery.value(1).toString();
@@ -31,9 +33,17 @@ void DataManager::loadData()
         m_allProductSerials.append(serial);
     }
 
-    QSqlQuery inspectorQuery("SELECT second_name FROM examiner");
-    while (inspectorQuery.next()) {
-        m_inspectors.append(inspectorQuery.value(0).toString());
+    // QSqlQuery inspectorQuery("SELECT second_name FROM employee");
+    // while (inspectorQuery.next()) {
+    //     m_inspectors.append(inspectorQuery.value(0).toString());
+    // }
+
+    QSqlQuery query(
+        "SELECT name || ' ' || second_name || COALESCE(' ' || middle_name, '') "
+        "FROM employee");
+
+    while (query.next()) {
+        m_inspectors << query.value(0).toString();
     }
 }
 
