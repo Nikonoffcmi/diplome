@@ -58,10 +58,6 @@ private slots:
 
     void on_pushButton_clicked();
 
-    void on_action_4_triggered();
-
-    void on_action_5_triggered();
-
     void on_action_2_triggered();
 
 private:
@@ -69,8 +65,11 @@ private:
     QSqlDatabase db;
     QSqlQueryModel* model;
     ScanningFilterModel* filModel;
+    bool admin;
+    int userId;
 
     void refreshScreen();
+    void setupMenu();
 };
 
 

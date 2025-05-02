@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8
 -- Dumped by pg_dump version 16.8
 
--- Started on 2025-05-01 19:58:00
+-- Started on 2025-05-02 17:03:22
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -88,7 +88,10 @@ CREATE TABLE public.employee (
     "Combined" boolean NOT NULL,
     id_person integer NOT NULL,
     id_post integer NOT NULL,
-    id_division integer NOT NULL
+    id_division integer NOT NULL,
+    login text NOT NULL,
+    password text NOT NULL,
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -176,12 +179,12 @@ CREATE TABLE public.measurement (
     id_measurement bigint NOT NULL,
     value_measurement double precision NOT NULL,
     measurement_number integer DEFAULT 1 NOT NULL,
-    datetime time without time zone NOT NULL,
     quality_protective_layer boolean NOT NULL,
     id_employee integer NOT NULL,
     id_product integer NOT NULL,
     id_device integer NOT NULL,
-    id_place_measurement integer NOT NULL
+    id_place_measurement integer NOT NULL,
+    datetime timestamp without time zone NOT NULL
 );
 
 
@@ -471,7 +474,7 @@ ALTER TABLE public.product_type ALTER COLUMN id_product_type ADD GENERATED ALWAY
 
 
 --
--- TOC entry 4955 (class 0 OID 16560)
+-- TOC entry 4956 (class 0 OID 16560)
 -- Dependencies: 224
 -- Data for Name: batch; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -483,7 +486,7 @@ COPY public.batch (id_batch, batch_number) FROM stdin;
 
 
 --
--- TOC entry 4951 (class 0 OID 16531)
+-- TOC entry 4952 (class 0 OID 16531)
 -- Dependencies: 220
 -- Data for Name: division; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -495,22 +498,22 @@ COPY public.division (id_division, name) FROM stdin;
 
 
 --
--- TOC entry 4953 (class 0 OID 16539)
+-- TOC entry 4954 (class 0 OID 16539)
 -- Dependencies: 222
 -- Data for Name: employee; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.employee (id_employee, "Combined", id_person, id_post, id_division) FROM stdin;
-1	f	1	1	1
-2	f	2	2	2
-4	t	3	2	1
-5	f	4	2	1
-3	t	3	3	1
+COPY public.employee (id_employee, "Combined", id_person, id_post, id_division, login, password, admin) FROM stdin;
+1	f	1	1	1	123	qwe	f
+2	f	2	2	2	456	rty	f
+3	t	3	3	1	admin	admin	t
+4	t	3	2	1	098	zxc	f
+5	f	4	2	1	666	lll	f
 \.
 
 
 --
--- TOC entry 4965 (class 0 OID 16618)
+-- TOC entry 4966 (class 0 OID 16618)
 -- Dependencies: 234
 -- Data for Name: manufacturer; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -524,27 +527,33 @@ COPY public.manufacturer (id_manufacturer, name) FROM stdin;
 
 
 --
--- TOC entry 4975 (class 0 OID 16679)
+-- TOC entry 4976 (class 0 OID 16679)
 -- Dependencies: 244
 -- Data for Name: measurement; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.measurement (id_measurement, value_measurement, measurement_number, datetime, quality_protective_layer, id_employee, id_product, id_device, id_place_measurement) FROM stdin;
-11	200	1	14:30:00	t	1	1	3	1
-12	300	1	14:40:00	t	1	1	3	2
-13	200	1	14:50:00	t	1	1	3	3
-14	100	1	10:30:00	t	2	2	5	1
-15	200	1	10:35:50	t	2	2	5	2
-16	150	1	10:40:00	t	2	2	5	3
-17	300	1	12:00:00	t	3	3	4	1
-18	450	1	12:10:00	f	3	3	4	2
-19	159	1	12:15:00	f	3	3	4	3
-20	201.4	2	13:20:00	t	5	3	5	3
+COPY public.measurement (id_measurement, value_measurement, measurement_number, quality_protective_layer, id_employee, id_product, id_device, id_place_measurement, datetime) FROM stdin;
+11	200	1	t	1	1	3	1	2025-01-10 14:10:00
+12	300	1	t	1	1	3	2	2025-01-10 14:15:00
+13	200	1	t	1	1	3	3	2025-01-10 14:02:00
+14	100	1	t	2	2	5	1	2025-01-10 18:00:00
+15	200	1	t	2	2	5	2	2025-01-10 18:13:00
+16	150	1	t	2	2	5	3	2025-01-10 18:30:00
+17	300	1	t	3	3	4	1	2025-02-20 22:45:50
+18	450	1	f	3	3	4	2	2025-02-20 22:25:20
+19	159	1	f	3	3	4	3	2025-02-20 22:34:00
+20	201.4	2	t	5	3	5	3	2025-03-03 16:12:13
+24	100	1	f	2	4	4	11	2025-05-02 07:12:03
+27	250	1	t	3	4	4	10	2025-05-01 18:00:31.824986
+30	250	1	t	3	4	4	12	2025-05-02 03:42:54.93901
+31	250	1	t	3	5	4	10	2025-05-02 03:55:29.227305
+32	250	1	t	1	5	4	11	2025-05-02 04:02:21.291799
+33	250	1	t	2	5	4	12	2025-05-02 04:07:29.205264
 \.
 
 
 --
--- TOC entry 4971 (class 0 OID 16647)
+-- TOC entry 4972 (class 0 OID 16647)
 -- Dependencies: 240
 -- Data for Name: measurement_characteristics; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -557,7 +566,7 @@ COPY public.measurement_characteristics (id_measurement_characteristics, id_meas
 
 
 --
--- TOC entry 4973 (class 0 OID 16666)
+-- TOC entry 4974 (class 0 OID 16666)
 -- Dependencies: 242
 -- Data for Name: measuring_device; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -572,7 +581,7 @@ COPY public.measuring_device (id_measuring_device, device_serial, id_measuring_d
 
 
 --
--- TOC entry 4969 (class 0 OID 16634)
+-- TOC entry 4970 (class 0 OID 16634)
 -- Dependencies: 238
 -- Data for Name: measuring_device_model; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -585,7 +594,7 @@ COPY public.measuring_device_model (id_measuring_device_model, name, id_manufact
 
 
 --
--- TOC entry 4961 (class 0 OID 16594)
+-- TOC entry 4962 (class 0 OID 16594)
 -- Dependencies: 230
 -- Data for Name: measuring_point; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -598,7 +607,7 @@ COPY public.measuring_point (id_measuring_point, point) FROM stdin;
 
 
 --
--- TOC entry 4967 (class 0 OID 16626)
+-- TOC entry 4968 (class 0 OID 16626)
 -- Dependencies: 236
 -- Data for Name: measuring_value; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -610,7 +619,7 @@ COPY public.measuring_value (id_measuring_value, name) FROM stdin;
 
 
 --
--- TOC entry 4946 (class 0 OID 16514)
+-- TOC entry 4947 (class 0 OID 16514)
 -- Dependencies: 215
 -- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -624,7 +633,7 @@ COPY public.person (id_person, name, second_name, middle_name) FROM stdin;
 
 
 --
--- TOC entry 4963 (class 0 OID 16602)
+-- TOC entry 4964 (class 0 OID 16602)
 -- Dependencies: 232
 -- Data for Name: place_measurement; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -646,7 +655,7 @@ COPY public.place_measurement (id_place_measurement, upper_limit_thickness, lowe
 
 
 --
--- TOC entry 4949 (class 0 OID 16523)
+-- TOC entry 4950 (class 0 OID 16523)
 -- Dependencies: 218
 -- Data for Name: post; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -659,7 +668,7 @@ COPY public.post (id_post, name) FROM stdin;
 
 
 --
--- TOC entry 4959 (class 0 OID 16576)
+-- TOC entry 4960 (class 0 OID 16576)
 -- Dependencies: 228
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -675,7 +684,7 @@ COPY public.product (id_product, product_serial, id_product_type, id_batch) FROM
 
 
 --
--- TOC entry 4957 (class 0 OID 16568)
+-- TOC entry 4958 (class 0 OID 16568)
 -- Dependencies: 226
 -- Data for Name: product_type; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -689,7 +698,7 @@ COPY public.product_type (id_product_type, name) FROM stdin;
 
 
 --
--- TOC entry 4981 (class 0 OID 0)
+-- TOC entry 4982 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: batch_id_batch_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -698,7 +707,7 @@ SELECT pg_catalog.setval('public.batch_id_batch_seq', 2, true);
 
 
 --
--- TOC entry 4982 (class 0 OID 0)
+-- TOC entry 4983 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: division_id_division_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -707,7 +716,7 @@ SELECT pg_catalog.setval('public.division_id_division_seq', 2, true);
 
 
 --
--- TOC entry 4983 (class 0 OID 0)
+-- TOC entry 4984 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: employee_id_employee_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -716,7 +725,7 @@ SELECT pg_catalog.setval('public.employee_id_employee_seq', 4, true);
 
 
 --
--- TOC entry 4984 (class 0 OID 0)
+-- TOC entry 4985 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: employment_id_employment_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -725,7 +734,7 @@ SELECT pg_catalog.setval('public.employment_id_employment_seq', 5, true);
 
 
 --
--- TOC entry 4985 (class 0 OID 0)
+-- TOC entry 4986 (class 0 OID 0)
 -- Dependencies: 233
 -- Name: manufacturer_id_manufacturer_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -734,7 +743,7 @@ SELECT pg_catalog.setval('public.manufacturer_id_manufacturer_seq', 4, true);
 
 
 --
--- TOC entry 4986 (class 0 OID 0)
+-- TOC entry 4987 (class 0 OID 0)
 -- Dependencies: 239
 -- Name: measurement_characteristics_id_measurement_characteristics_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -743,16 +752,16 @@ SELECT pg_catalog.setval('public.measurement_characteristics_id_measurement_char
 
 
 --
--- TOC entry 4987 (class 0 OID 0)
+-- TOC entry 4988 (class 0 OID 0)
 -- Dependencies: 243
 -- Name: measurement_id_measurement_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.measurement_id_measurement_seq', 20, true);
+SELECT pg_catalog.setval('public.measurement_id_measurement_seq', 33, true);
 
 
 --
--- TOC entry 4988 (class 0 OID 0)
+-- TOC entry 4989 (class 0 OID 0)
 -- Dependencies: 241
 -- Name: measuring_device_id_measuring_device_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -761,7 +770,7 @@ SELECT pg_catalog.setval('public.measuring_device_id_measuring_device_seq', 7, t
 
 
 --
--- TOC entry 4989 (class 0 OID 0)
+-- TOC entry 4990 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: measuring_device_model_id_measuring_device_model_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -770,7 +779,7 @@ SELECT pg_catalog.setval('public.measuring_device_model_id_measuring_device_mode
 
 
 --
--- TOC entry 4990 (class 0 OID 0)
+-- TOC entry 4991 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: measuring_point_id_measuring_point_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -779,7 +788,7 @@ SELECT pg_catalog.setval('public.measuring_point_id_measuring_point_seq', 3, tru
 
 
 --
--- TOC entry 4991 (class 0 OID 0)
+-- TOC entry 4992 (class 0 OID 0)
 -- Dependencies: 235
 -- Name: measuring_value_id_measuring_value_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -788,7 +797,7 @@ SELECT pg_catalog.setval('public.measuring_value_id_measuring_value_seq', 2, tru
 
 
 --
--- TOC entry 4992 (class 0 OID 0)
+-- TOC entry 4993 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: place_measurement_id_place_measurement_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -797,7 +806,7 @@ SELECT pg_catalog.setval('public.place_measurement_id_place_measurement_seq', 12
 
 
 --
--- TOC entry 4993 (class 0 OID 0)
+-- TOC entry 4994 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: post_id_post_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -806,7 +815,7 @@ SELECT pg_catalog.setval('public.post_id_post_seq', 4, true);
 
 
 --
--- TOC entry 4994 (class 0 OID 0)
+-- TOC entry 4995 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: product_id_product_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -815,7 +824,7 @@ SELECT pg_catalog.setval('public.product_id_product_seq', 6, true);
 
 
 --
--- TOC entry 4995 (class 0 OID 0)
+-- TOC entry 4996 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: product_type_id_product_type_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -824,7 +833,7 @@ SELECT pg_catalog.setval('public.product_type_id_product_type_seq', 4, true);
 
 
 --
--- TOC entry 4768 (class 2606 OID 16566)
+-- TOC entry 4769 (class 2606 OID 16566)
 -- Name: batch batch_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -833,7 +842,7 @@ ALTER TABLE ONLY public.batch
 
 
 --
--- TOC entry 4764 (class 2606 OID 16537)
+-- TOC entry 4765 (class 2606 OID 16537)
 -- Name: division division_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -842,7 +851,7 @@ ALTER TABLE ONLY public.division
 
 
 --
--- TOC entry 4760 (class 2606 OID 16520)
+-- TOC entry 4761 (class 2606 OID 16520)
 -- Name: person employee_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -851,7 +860,7 @@ ALTER TABLE ONLY public.person
 
 
 --
--- TOC entry 4766 (class 2606 OID 16543)
+-- TOC entry 4767 (class 2606 OID 16543)
 -- Name: employee employment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -860,7 +869,7 @@ ALTER TABLE ONLY public.employee
 
 
 --
--- TOC entry 4778 (class 2606 OID 16624)
+-- TOC entry 4779 (class 2606 OID 16624)
 -- Name: manufacturer manufacturer_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -869,7 +878,7 @@ ALTER TABLE ONLY public.manufacturer
 
 
 --
--- TOC entry 4784 (class 2606 OID 16653)
+-- TOC entry 4785 (class 2606 OID 16653)
 -- Name: measurement_characteristics measurement_characteristics_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -878,7 +887,7 @@ ALTER TABLE ONLY public.measurement_characteristics
 
 
 --
--- TOC entry 4788 (class 2606 OID 16684)
+-- TOC entry 4789 (class 2606 OID 16684)
 -- Name: measurement measurement_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -887,7 +896,7 @@ ALTER TABLE ONLY public.measurement
 
 
 --
--- TOC entry 4782 (class 2606 OID 16640)
+-- TOC entry 4783 (class 2606 OID 16640)
 -- Name: measuring_device_model measuring_device_model_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -896,7 +905,7 @@ ALTER TABLE ONLY public.measuring_device_model
 
 
 --
--- TOC entry 4786 (class 2606 OID 16672)
+-- TOC entry 4787 (class 2606 OID 16672)
 -- Name: measuring_device measuring_device_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -905,7 +914,7 @@ ALTER TABLE ONLY public.measuring_device
 
 
 --
--- TOC entry 4774 (class 2606 OID 16600)
+-- TOC entry 4775 (class 2606 OID 16600)
 -- Name: measuring_point measuring_point_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -914,7 +923,7 @@ ALTER TABLE ONLY public.measuring_point
 
 
 --
--- TOC entry 4780 (class 2606 OID 16632)
+-- TOC entry 4781 (class 2606 OID 16632)
 -- Name: measuring_value measuring_value_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -923,7 +932,7 @@ ALTER TABLE ONLY public.measuring_value
 
 
 --
--- TOC entry 4776 (class 2606 OID 16606)
+-- TOC entry 4777 (class 2606 OID 16606)
 -- Name: place_measurement place_measurement_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -932,7 +941,7 @@ ALTER TABLE ONLY public.place_measurement
 
 
 --
--- TOC entry 4762 (class 2606 OID 16527)
+-- TOC entry 4763 (class 2606 OID 16527)
 -- Name: post post_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -941,7 +950,7 @@ ALTER TABLE ONLY public.post
 
 
 --
--- TOC entry 4772 (class 2606 OID 16582)
+-- TOC entry 4773 (class 2606 OID 16582)
 -- Name: product product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -950,7 +959,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 4770 (class 2606 OID 16574)
+-- TOC entry 4771 (class 2606 OID 16574)
 -- Name: product_type product_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -959,7 +968,7 @@ ALTER TABLE ONLY public.product_type
 
 
 --
--- TOC entry 4789 (class 2606 OID 16554)
+-- TOC entry 4790 (class 2606 OID 16554)
 -- Name: employee fk_employment_division; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -968,7 +977,7 @@ ALTER TABLE ONLY public.employee
 
 
 --
--- TOC entry 4790 (class 2606 OID 16544)
+-- TOC entry 4791 (class 2606 OID 16544)
 -- Name: employee fk_employment_employee; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -977,7 +986,7 @@ ALTER TABLE ONLY public.employee
 
 
 --
--- TOC entry 4791 (class 2606 OID 16549)
+-- TOC entry 4792 (class 2606 OID 16549)
 -- Name: employee fk_employment_post; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -986,7 +995,7 @@ ALTER TABLE ONLY public.employee
 
 
 --
--- TOC entry 4796 (class 2606 OID 16641)
+-- TOC entry 4797 (class 2606 OID 16641)
 -- Name: measuring_device_model fk_measuring_device_model_manufacturer; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -995,7 +1004,7 @@ ALTER TABLE ONLY public.measuring_device_model
 
 
 --
--- TOC entry 4794 (class 2606 OID 16612)
+-- TOC entry 4795 (class 2606 OID 16612)
 -- Name: place_measurement fk_place_measurement_measurement_point; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1004,7 +1013,7 @@ ALTER TABLE ONLY public.place_measurement
 
 
 --
--- TOC entry 4795 (class 2606 OID 16607)
+-- TOC entry 4796 (class 2606 OID 16607)
 -- Name: place_measurement fk_place_measurement_product_type; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1013,7 +1022,7 @@ ALTER TABLE ONLY public.place_measurement
 
 
 --
--- TOC entry 4792 (class 2606 OID 16588)
+-- TOC entry 4793 (class 2606 OID 16588)
 -- Name: product fk_product_batch; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1022,7 +1031,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 4793 (class 2606 OID 16583)
+-- TOC entry 4794 (class 2606 OID 16583)
 -- Name: product fk_product_product_type; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1031,7 +1040,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 4798 (class 2606 OID 16659)
+-- TOC entry 4799 (class 2606 OID 16659)
 -- Name: measurement_characteristics measurement_characteristics_id_measuring_value_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1040,7 +1049,7 @@ ALTER TABLE ONLY public.measurement_characteristics
 
 
 --
--- TOC entry 4800 (class 2606 OID 16695)
+-- TOC entry 4801 (class 2606 OID 16695)
 -- Name: measurement measurement_id_device_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1049,7 +1058,7 @@ ALTER TABLE ONLY public.measurement
 
 
 --
--- TOC entry 4801 (class 2606 OID 16685)
+-- TOC entry 4802 (class 2606 OID 16685)
 -- Name: measurement measurement_id_employment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1058,7 +1067,7 @@ ALTER TABLE ONLY public.measurement
 
 
 --
--- TOC entry 4802 (class 2606 OID 16690)
+-- TOC entry 4803 (class 2606 OID 16690)
 -- Name: measurement measurement_id_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1067,7 +1076,7 @@ ALTER TABLE ONLY public.measurement
 
 
 --
--- TOC entry 4799 (class 2606 OID 16700)
+-- TOC entry 4800 (class 2606 OID 16700)
 -- Name: measuring_device measuring_device_id_measuring_device_model_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1076,7 +1085,7 @@ ALTER TABLE ONLY public.measuring_device
 
 
 --
--- TOC entry 4797 (class 2606 OID 16705)
+-- TOC entry 4798 (class 2606 OID 16705)
 -- Name: measuring_device_model measuring_device_model_id_measurement_characteristics_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1084,7 +1093,7 @@ ALTER TABLE ONLY public.measuring_device_model
     ADD CONSTRAINT measuring_device_model_id_measurement_characteristics_fkey FOREIGN KEY (id_measurement_characteristics) REFERENCES public.measurement_characteristics(id_measurement_characteristics) NOT VALID;
 
 
--- Completed on 2025-05-01 19:58:00
+-- Completed on 2025-05-02 17:03:22
 
 --
 -- PostgreSQL database dump complete

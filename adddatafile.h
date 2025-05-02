@@ -31,7 +31,7 @@ class AddDataFile : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddDataFile(QWidget *parent = nullptr, QSqlDatabase db = QSqlDatabase::database());
+    explicit AddDataFile(QWidget *parent = nullptr, int userId = 0);
     ~AddDataFile();
 
     void show()
@@ -54,7 +54,6 @@ private slots:
     void validateInstrumentSerial();
     void validateProduct();
     void validateProductSerial();
-    void validateInspector();
 
     void onInstrumentSerialSelected(const QString &text);
     void onProductSerialSelected(const QString &text);
@@ -66,6 +65,8 @@ private:
     QStandardItemModel *tableModel;
     bool m_operationSuccessful = true;
     QStandardItemModel *dataModel;
+    int m_userId;
+
     void loadTextFile(const QString &fileName);
     void loadExcelFile(const QString &fileName);
 
@@ -74,8 +75,10 @@ private:
     void setupCompleters();
     void connectSignals();
 
-    bool insertIntoDatabase(const QVariantList &data);
-    QString searchDataDB(const QString &data, const QString &dataTable, const QString &dataWhere);
+    bool insertIntoDatabase(double value, QString Date, QString product, int placeId, QString serial);
+    int getPlaceId(const QString &plase);
+    bool validateMeasurement(double value, int placeId);
+    QString searchDataDB(const QString &idName, const QString &data, const QString &dataTable, const QString &dataWhere);
 };
 
 #endif // ADDDATAFILE_H

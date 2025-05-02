@@ -8,22 +8,24 @@
 #include "xlsxworkbook.h"
 
 
-AddDataFile::AddDataFile(QWidget *parent, QSqlDatabase db)
+AddDataFile::AddDataFile(QWidget *parent, int userId)
     : QDialog(parent)
     , ui(new Ui::AddDataFile)
     , tableModel(new QStandardItemModel(this))
 {
     ui->setupUi(this);
     ui->tableView->setModel(tableModel);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    m_userId = userId;
 
     ui->lineEditDevice->installEventFilter(this);
     ui->lineEditDeviceSerial->installEventFilter(this);
     ui->lineEditProduct->installEventFilter(this);
     ui->lineEditProductSerial->installEventFilter(this);
-    ui->lineEditInspector->installEventFilter(this);
 
     QString fileFilter = " CSV (*.csv);;Text File (*.txt);;Excel (*.xlsx);;All file (*.*) ";
-    QString file_name = QFileDialog::getOpenFileName(this, "Открыть файл", "", fileFilter);
+    QString file_name = QFileDialog::getOpenFileName(this, tr("Открыть файл"), "", fileFilter);
     if (file_name.isEmpty()) {
         m_operationSuccessful = false;
         return;
@@ -56,7 +58,7 @@ void AddDataFile::loadTextFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::critical(this, "Ошибка", "Файл не открывается");
+        QMessageBox::critical(this, tr("Ошибка"), tr("Файл не открывается"));
         return;
     }
 
@@ -64,7 +66,6 @@ void AddDataFile::loadTextFile(const QString &fileName)
     QTextStream in(&file);
     QString delimiter = ",";
 
-    // Автоопределение разделителя
     QString firstLine = in.readLine();
     if (firstLine.contains("\t")) delimiter = "\t";
     else if (firstLine.contains(";")) delimiter = ";";
@@ -98,7 +99,7 @@ void AddDataFile::loadExcelFile(const QString &fileName)
     using namespace QXlsx;
     Document xlsx(fileName);
     if (!xlsx.isLoadPackage()) {
-        QMessageBox::critical(this, "Ошибка", "Файл Ecxel не открывается");
+        QMessageBox::critical(this, tr("Ошибка"), tr("Файл Ecxel не открывается"));
         return;
     }
 
@@ -109,7 +110,6 @@ void AddDataFile::loadExcelFile(const QString &fileName)
     int col = 1;
     bool hasHeader = true;
 
-    // Чтение заголовков
     if (hasHeader) {
         QStringList headers;
         auto cell = worksheet->cellAt(row, col);
@@ -122,7 +122,6 @@ void AddDataFile::loadExcelFile(const QString &fileName)
         row++;
     }
 
-    // Чтение данных
     row = hasHeader ? 2 : 1;
     while (true) {
         auto cell = worksheet->cellAt(row, 1);
@@ -146,27 +145,6 @@ void AddDataFile::loadExcelFile(const QString &fileName)
 
 void AddDataFile::setupCompleters()
 {
-//     // Измерительный прибор
-//     QCompleter *instrumentCompleter = new QCompleter(m_dataManager.getInstruments(), this);
-//     instrumentCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-//     ui->lineEditDevice->setCompleter(instrumentCompleter);
-
-//     // Серийный номер прибора
-//     QCompleter *instrumentSerialCompleter = new QCompleter(this);
-//     instrumentSerialCompleter->setModel(new QStringListModel(m_dataManager.getInstrumentSerials(""), this));
-//     ui->lineEditDeviceSerial->setCompleter(instrumentSerialCompleter);
-
-//     // Изделие
-//     QCompleter *productCompleter = new QCompleter(m_dataManager.getProducts(), this);
-//     productCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-//     ui->lineEditProduct->setCompleter(productCompleter);
-
-//     // Серийный номер изделия
-//     QCompleter *productSerialCompleter = new QCompleter(this);
-//     productSerialCompleter->setModel(new QStringListModel(m_dataManager.getProductSerials(""), this));
-//     ui->lineEditProductSerial->setCompleter(productSerialCompleter);
-
-    // Настройка для всех комплетеров
     auto createCompleter = [](const QStringList& data) {
         QCompleter* c = new QCompleter;
         ContainsFilterProxyModel* proxyModel = new ContainsFilterProxyModel(c);
@@ -190,14 +168,10 @@ void AddDataFile::setupCompleters()
 
     // Изделие
     ui->lineEditProduct->setCompleter(createCompleter(m_dataManager.getProducts()));
-
-    // Проверяющий
-    ui->lineEditInspector->setCompleter(createCompleter(m_dataManager.getInspectors()));
 }
 
 void AddDataFile::connectSignals()
 {
-    // Обновление списков серийных номеров
     connect(ui->lineEditDevice, &QLineEdit::textChanged, this, &AddDataFile::updateInstrumentSerials);
     connect(ui->lineEditProduct, &QLineEdit::textChanged, this, &AddDataFile::updateProductSerials);
 
@@ -212,18 +186,10 @@ void AddDataFile::connectSignals()
             this, &AddDataFile::onInstrumentSerialSelected);
     connect(ui->lineEditProductSerial->completer(), QOverload<const QString &>::of(&QCompleter::activated),
             this, &AddDataFile::onProductSerialSelected);
-    connect(ui->lineEditInspector, &QLineEdit::editingFinished, this, &AddDataFile::validateInspector);
 }
 
 void AddDataFile::updateInstrumentSerials()
 {
-    // QString instrument = ui->lineEditDevice->text();
-    // QStringList serials = m_dataManager.getInstrumentSerials(instrument);
-
-    // QCompleter *completer = ui->lineEditDeviceSerial->completer();
-    // QStringListModel *model = qobject_cast<QStringListModel*>(completer->model());
-    // model->setStringList(serials);
-
     QString instrument = ui->lineEditDevice->text();
     QStringList serials = m_dataManager.getInstrumentSerials(instrument);
 
@@ -235,13 +201,6 @@ void AddDataFile::updateInstrumentSerials()
 
 void AddDataFile::updateProductSerials()
 {
-//     QString product = ui->lineEditProduct->text();
-//     QStringList serials = m_dataManager.getProductSerials(product);
-
-//     QCompleter *completer = ui->lineEditProductSerial->completer();
-//     QStringListModel *model = qobject_cast<QStringListModel*>(completer->model());
-//     model->setStringList(serials);
-
     QString product = ui->lineEditProduct->text();
     QStringList serials = m_dataManager.getProductSerials(product);
 
@@ -260,13 +219,6 @@ void AddDataFile::validateInstrument()
 
 void AddDataFile::validateInstrumentSerial()
 {
-    // QString text = ui->lineEditDeviceSerial->text();
-    // QString instrument = ui->lineEditDevice->text();
-    // QStringList valid = m_dataManager.getInstrumentSerials(instrument);
-
-    // if (!valid.contains(text))
-    //     ui->lineEditDeviceSerial->clear();
-
     QString serial = ui->lineEditDeviceSerial->text();
     QString instrument = ui->lineEditDevice->text();
 
@@ -289,13 +241,6 @@ void AddDataFile::validateProduct()
 
 void AddDataFile::validateProductSerial()
 {
-    // QString text = ui->lineEditProductSerial->text();
-    // QString product = ui->lineEditProduct->text();
-    // QStringList valid = m_dataManager.getProductSerials(product);
-
-    // if (!valid.contains(text))
-    //     ui->lineEditProductSerial->clear();
-
     QString serial = ui->lineEditProductSerial->text();
     QString product = ui->lineEditProduct->text();
 
@@ -309,58 +254,26 @@ void AddDataFile::validateProductSerial()
     }
 }
 
-void AddDataFile::validateInspector()
-{
-    QString text = ui->lineEditInspector->text();
-    if (!m_dataManager.getInspectors().contains(text, Qt::CaseInsensitive))
-        ui->lineEditInspector->clear();
-}
-
 void AddDataFile::onInstrumentSerialSelected(const QString &text)
 {
-    // QString instrument = m_dataManager.instrumentBySerial(text);
-    // if (!instrument.isEmpty()) {
-    //     ui->lineEditDevice->setText(instrument);
-    // }
-
     QString instrument = m_dataManager.instrumentBySerial(text);
     if (!instrument.isEmpty()) {
         ui->lineEditDevice->setText(instrument);
-        // Обновляем список серийных номеров для выбранного прибора
         updateInstrumentSerials();
     }
 }
 
 void AddDataFile::onProductSerialSelected(const QString &text)
 {
-    // QString product = m_dataManager.productBySerial(text);
-    // if (!product.isEmpty()) {
-    //     ui->lineEditProduct->setText(product);
-    // }
-
     QString product = m_dataManager.productBySerial(text);
     if (!product.isEmpty()) {
         ui->lineEditProduct->setText(product);
-        // Обновляем список серийных номеров для выбранного изделия
         updateProductSerials();
     }
 }
 
-// Переопределение события фокуса для показа полного списка
 bool AddDataFile::eventFilter(QObject *obj, QEvent *event)
 {
-    // if (event->type() == QEvent::FocusIn) {
-    //     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(obj);
-    //     if (lineEdit && lineEdit->text().isEmpty()) {
-    //         QCompleter *comp = lineEdit->completer();
-    //         if (comp) {
-    //             comp->setCompletionMode(QCompleter::PopupCompletion);
-    //             comp->complete();
-    //         }
-    //     }
-    // }
-    // return QDialog::eventFilter(obj, event);
-
     if (event->type() == QEvent::FocusIn) {
         if (auto lineEdit = qobject_cast<QLineEdit*>(obj)) {
             QCompleter *comp = lineEdit->completer();
@@ -370,7 +283,6 @@ bool AddDataFile::eventFilter(QObject *obj, QEvent *event)
                     comp->setCompletionPrefix("");
                     comp->complete();
                 }
-                // Форсируем обновление списка
                 comp->setCompletionPrefix(lineEdit->text());
             }
         }
@@ -380,54 +292,63 @@ bool AddDataFile::eventFilter(QObject *obj, QEvent *event)
 
 void AddDataFile::on_AccBtn_clicked()
 {
-    // Получаем данные из LineEdit
-    QVariantList lineEditData = {
-        searchDataDB(ui->lineEditDeviceSerial->text(), "measuring_device", "device_serial"),
-        searchDataDB(ui->lineEditProductSerial->text(), "product", "product_serial")
-    };
 
-    // Получаем выбранные строки из TableView
+    auto MD = searchDataDB("id_measuring_device", ui->lineEditDeviceSerial->text(), "measuring_device", "device_serial");
+    auto P = searchDataDB("id_product", ui->lineEditProductSerial->text(), "product", "product_serial");
+
+
     QModelIndexList selected = ui->tableView->selectionModel()->selectedRows();
 
     if (selected.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Не выбраны сторки из таблицы!");
+        QMessageBox::warning(this, tr("Ошибка"), tr("Не выбраны сторки из таблицы!"));
         return;
     }
 
-    // Перебираем выбранные строки
     foreach (const QModelIndex &index, selected) {
         int row = index.row();
-        // Получаем данные из 3 колонок таблицы
-        QVariantList tableData = {
-            ui->tableView->model()->index(row,0).data().toString(),
-            ui->tableView->model()->index(row,1).data().toString(),
-            searchDataDB(ui->tableView->model()->index(row,2).data().toString(), "measuring_point", "measuring_point")
-        };
+        auto M = ui->tableView->model()->index(row,0).data().toInt();
+        auto Date = ui->tableView->model()->index(row,1).data().toString();
+        auto Place = getPlaceId(ui->tableView->model()->index(row,2).data().toString());
 
-        // Объединяем данные
-        QVariantList allData = lineEditData + tableData;
 
-        // Вставляем в БД
-        if (!insertIntoDatabase(allData)) {
-            QMessageBox::critical(this, "Ощибка", "Не получилось добавить данные в базу данных!");
+        if (!insertIntoDatabase(M, Date, P, Place, MD)) {
+            QMessageBox::critical(this, tr("Ошибка"), tr("Не получилось добавить данные в базу данных!"));
             return;
         }
     }
 
-    QMessageBox::information(this, "Успех", "Данные дабавленные в базу данных!");
+    QMessageBox::information(this, tr("Успех"), tr("Данные дабавленные в базу данных!"));
 
 }
 
-bool AddDataFile::insertIntoDatabase(const QVariantList &data)
+bool AddDataFile::insertIntoDatabase(double value, QString Date, QString product, int placeId, QString serial)
 {
-    QSqlQuery query;
-    query.prepare("INSERT INTO measurement"
-                  "(id_measuring_device, id_product, value_measurement, datetime, id_measurement_point, measurement_number)"
-                  "VALUES (?, ?, ?, ?, ?, 1)");
+    QSqlQuery query, query_number;
+    query_number.prepare("SELECT MAX(M.measurement_number) FROM measurement M \
+                    WHERE M.id_product = ? and M.id_place_measurement = ?");
+    query_number.addBindValue(product);
+    query_number.addBindValue(placeId);
 
-    for (const QVariant &value : data) {
-        query.addBindValue(value);
+    if (!query_number.exec()) {
+        QMessageBox::critical(this, "Database Error", query_number.lastError().text());
+        return false;
     }
+    int M_number = 1;
+    if (query_number.next()){
+        M_number = query_number.value(0).toInt() == 0 ? 1 : query_number.value(0).toInt() + 1;
+    }
+    query.prepare("INSERT INTO measurement (value_measurement, datetime, quality_protective_layer, "
+                  "id_employee, id_product, id_device, id_place_measurement, measurement_number) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+    query.addBindValue(value);
+    query.addBindValue(Date);
+    query.addBindValue(validateMeasurement(value, placeId));
+    query.addBindValue(m_userId);
+    query.addBindValue(product);
+    query.addBindValue(serial);
+    query.addBindValue(placeId);
+    query.addBindValue(M_number);
 
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
@@ -436,19 +357,18 @@ bool AddDataFile::insertIntoDatabase(const QVariantList &data)
     return true;
 }
 
-QString AddDataFile::searchDataDB(const QString &data, const QString &dataTable, const QString &dataWhere)
+QString AddDataFile::searchDataDB(const QString &idName, const QString &data, const QString &dataTable, const QString &dataWhere)
 {
     QSqlQuery query;
-    QString sqlreq = QString("SELECT id FROM %1 WHERE %2 = ?").arg(dataTable).arg(dataWhere);
+    QString sqlreq = QString("SELECT "+idName+" FROM " + dataTable + " WHERE " + dataWhere + " = ?");
     query.prepare(sqlreq);
 
     query.addBindValue(data);
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
-        return {}; // Возвращаем пустую строку вместо nullptr
+        return {};
     }
 
-    // Добавляем проверку наличия результатов
     if (query.next()) {
         return query.value(0).toString();
     } else {
@@ -456,4 +376,31 @@ QString AddDataFile::searchDataDB(const QString &data, const QString &dataTable,
                              QString("Данные не найдены: %1 в таблице %2").arg(data).arg(dataTable));
         return {};
     }
+}
+
+int AddDataFile::getPlaceId(const QString &plase) {
+    QSqlQuery query;
+    query.prepare("SELECT PM.id_place_measurement FROM measuring_point MP \
+                JOIN place_measurement PM \
+                ON PM.id_measurement_point = MP.id_measuring_point \
+                JOIN product_type PT \
+                ON PT.id_product_type = PM.id_product_type \
+                where mp.point = ? and pt.name = ?;");
+    query.addBindValue(plase);
+    query.addBindValue(ui->lineEditProduct->text());
+    query.exec();
+    return query.next() ? query.value(0).toInt() : -1;
+}
+
+bool AddDataFile::validateMeasurement(double value, int placeId) {
+    QSqlQuery query;
+    query.prepare("SELECT lower_limit_thickness, upper_limit_thickness FROM place_measurement WHERE id_place_measurement = ?");
+    query.addBindValue(placeId);
+    query.exec();
+    if (query.next()) {
+        double lower = query.value(0).toDouble();
+        double upper = query.value(1).toDouble();
+        return (value >= lower && value <= upper);
+    }
+    return false;
 }

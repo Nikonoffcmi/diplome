@@ -10,9 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     adddatafile.cpp \
+    authdialog.cpp \
     comportadd.cpp \
-    dataanalyze.cpp \
-    datacharts.cpp \
     datamanager.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,23 +19,22 @@ SOURCES += \
 
 HEADERS += \
     adddatafile.h \
+    authdialog.h \
     comportadd.h \
-    dataanalyze.h \
-    datacharts.h \
     datamanager.h \
     mainwindow.h \
     reportcreate.h
 
 FORMS += \
     adddatafile.ui \
+    authdialog.ui \
     comportadd.ui \
-    dataanalyze.ui \
-    datacharts.ui \
     mainwindow.ui \
     reportcreate.ui
 
-# TRANSLATIONS += \
-#     diplome_ru_RU.ts
+TRANSLATIONS += \
+    diplome_en_US.ts \
+    diplome_ru_RU.ts
 # CONFIG += lrelease
 # CONFIG += embed_translations
 

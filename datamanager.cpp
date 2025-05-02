@@ -7,12 +7,9 @@ DataManager::DataManager(QObject *parent) : QObject(parent) {}
 
 void DataManager::loadData()
 {
-    // Загрузка приборов
     QSqlQuery instrumentQuery("SELECT MDM.name, MD.device_serial FROM measuring_device MD \
-        JOIN measurement_characteristics MC \
-        ON MD.id_characteristics = MC.id_measurement_characteristics \
         JOIN measuring_device_model MDM \
-        ON MC.id_measuring_device_model = MDM.id_measuring_device_model;");
+        ON MD.id_measuring_device_model = MDM.id_measuring_device_model;");
     while (instrumentQuery.next()) {
         QString name = instrumentQuery.value(0).toString();
         QString serial = instrumentQuery.value(1).toString();
@@ -21,7 +18,6 @@ void DataManager::loadData()
         m_allInstrumentSerials.append(serial);
     }
 
-    // Загрузка изделий
     QSqlQuery productQuery("SELECT PD.name, P.product_serial FROM product P\
         JOIN product_type PD \
         ON P.id_product_type = PD.id_product_type;");

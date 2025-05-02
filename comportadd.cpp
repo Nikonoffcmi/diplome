@@ -2,14 +2,17 @@
 #include "QJsonObject"
 #include "ui_comportadd.h"
 
-COMportAdd::COMportAdd(QWidget *parent)
+COMportAdd::COMportAdd(QWidget *parent, int userId)
     : QDialog(parent)
     , ui(new Ui::COMportAdd)
 {
     ui->setupUi(this);
     dataModel = new QStandardItemModel(this);
     ui->tableView->setModel(dataModel);
-    QStringList fields = {"Номер устройства", "Измерение", "Значение"};
+
+    m_userId = userId;
+
+    QStringList fields = {tr("Номер устройства"), tr("Измерение"), tr("Значение")};
     dataModel->clear();
     dataModel->setHorizontalHeaderLabels(fields);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -19,14 +22,13 @@ COMportAdd::COMportAdd(QWidget *parent)
     loadPorts();
     ui->lineEditProduct->installEventFilter(this);
     ui->lineEditProductSerial->installEventFilter(this);
-    ui->lineEditInspector->installEventFilter(this);
     ui->cmbPoint->installEventFilter(this);
 
     m_dataManager.loadData();
     setupCompleters();
     connectSignals();
     _serialPort = nullptr;
-    ui->label_10->setText("Отключен");
+    ui->label_10->setText(tr("Отключен"));
 }
 
 COMportAdd::~COMportAdd()
@@ -60,15 +62,15 @@ void COMportAdd::on_btnOpenPort_clicked()
 
     if (_serialPort->open(QIODevice::ReadWrite)) {
         QObject::connect(_serialPort, &QSerialPort::readyRead, this, &COMportAdd::readData);
-        ui->label_10->setText("Подключен");
+        ui->label_10->setText(tr("Подключен"));
     } else {
-        QMessageBox::critical(this, "Ошибка порта", "невозможно присоединиться к порту");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("Невозможно присоединиться к порту"));
     }
 }
 
 void COMportAdd::readData(){
     if (_serialPort == nullptr || !_serialPort->isOpen()){
-        QMessageBox::critical(this, "Ошибка порта", "порт не подключен для получения данных");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("Порт не подключен для получения данных"));
         return;
     }
     if (_struct.command == 0)
@@ -98,33 +100,39 @@ void COMportAdd::on_btnAddData_clicked()
     QModelIndexList selected = ui->tableView->selectionModel()->selectedRows();
 
     if (selected.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Не выбраны сторки из таблицы!");
-        return;
-    }
-    int row = selected[0].row();
-
-
-    int serial = getDeviceId(ui->tableView->model()->index(row, 0).data().toString());
-    QString quantity = ui->tableView->model()->index(row,1).data().toString();
-    double value = ui->tableView->model()->index(row,2).data().toDouble();
-
-    if (serial == -1) {
-        QMessageBox::critical(this, "Ошибка серийного номера", "Такой серийный номер устройства не существует");
-        return;
-    }
-    if (!checkQuantity(serial, quantity)) {
-        QMessageBox::critical(this, "Ошибка измерения", "Такого типа измерения не существует");
+        QMessageBox::warning(this, tr("Ошибка"), tr("Не выбраны сторки из таблицы!"));
         return;
     }
 
-    QString placeStrId = ui->cmbPoint->currentText();
-    int placeId = getPlaceId(placeStrId);
-    if (placeId == -1) {
-        QMessageBox::critical(this, "Ошибка места измерения", "Такое место измерния не найдено");
-        return;
-    }
+    foreach (const QModelIndex &index, selected) {
+        int row = index.row();
 
-    saveToDatabase(value, placeId, serial);
+        int serial = getDeviceId(ui->tableView->model()->index(row, 0).data().toString());
+        QString quantity = ui->tableView->model()->index(row,1).data().toString();
+        double value = ui->tableView->model()->index(row,2).data().toDouble();
+
+        if (serial == -1) {
+            QMessageBox::critical(this, tr("Ошибка серийного номера"), tr("Такой серийный номер устройства не существует"));
+            return;
+        }
+        if (!checkQuantity(serial, quantity)) {
+            QMessageBox::critical(this, tr("Ошибка измерения"), tr("Такого типа измерения не существует"));
+            return;
+        }
+
+        QString placeStrId = ui->cmbPoint->currentText();
+        int placeId = getPlaceId(placeStrId);
+        if (placeId == -1) {
+            QMessageBox::critical(this, tr("Ошибка места измерения"), tr("Такое место измерния не найдено"));
+            return;
+        }
+
+        if (!saveToDatabase(value, placeId, serial)) {
+            QMessageBox::critical(this, tr("Ошибка"), tr("Не получилось добавить данные в базу данных!"));
+            return;
+        }
+    }
+    QMessageBox::information(this, tr("Успех"), tr("Данные дабавленные в базу данных!"));
 }
 
 
@@ -141,22 +149,39 @@ bool COMportAdd::validateMeasurement(double value, int placeId) {
     return false;
 }
 
-void COMportAdd::saveToDatabase(double value, int placeId, int serial) {
-    QSqlQuery query;
-    query.prepare("INSERT INTO measurement (value_measurement, datetime, quality_protective_layer, id_employee, id_product, id_device, id_place_measurement) VALUES (?, LOCALTIMESTAMP, ?, ?, ?, ?, ?)");
+bool COMportAdd::saveToDatabase(double value, int placeId, int serial) {
+    QSqlQuery query, query_number;
+    auto product = searchDataDB("id_product", ui->lineEditProductSerial->text(), "product", "product_serial");
+
+    query_number.prepare("SELECT MAX(M.measurement_number) FROM measurement M \
+                    WHERE M.id_product = ? and M.id_place_measurement = ?");
+    query_number.addBindValue(product);
+    query_number.addBindValue(placeId);
+
+    if (!query_number.exec()) {
+        QMessageBox::critical(this, "Database Error", query_number.lastError().text());
+        return false;
+    }
+    int M_number = 1;
+    if (query_number.next()){
+        M_number = query_number.value(0).toInt() == 0 ? 1 : query_number.value(0).toInt() + 1;
+    }
+
+    query.prepare("INSERT INTO measurement (value_measurement, datetime, quality_protective_layer, "
+                  "id_employee, id_product, id_device, id_place_measurement, measurement_number) "
+                  "VALUES (?, LOCALTIMESTAMP, ?, ?, ?, ?, ?, ?)");
     query.addBindValue(value);
     query.addBindValue(validateMeasurement(value, placeId));
-    query.addBindValue(searchDataDB("id_person", ui->lineEditInspector->text(), "person", "second_name"));
-    query.addBindValue(searchDataDB("id_product", ui->lineEditProductSerial->text(), "product", "product_serial"));
+    query.addBindValue(m_userId);
+    query.addBindValue(product);
     query.addBindValue(serial);
     query.addBindValue(placeId);
+    query.addBindValue(M_number);
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
-        return;
+        return false;
     }
-    else {
-        QMessageBox::information(this, "Успех", "Данные добаленны успешно");
-    }
+    return true;
 }
 
 int COMportAdd::getDeviceId(const QString &serial) {
@@ -208,30 +233,30 @@ qint64 COMportAdd::write(QByteArray data)
 void COMportAdd::on_btnStart_clicked()
 {
     if (_serialPort == nullptr || !_serialPort->isOpen()){
-        QMessageBox::critical(this, "Ошибка порта", "порт не подключен");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("порт не подключен"));
         return;
     }
     _struct.command = 1;
     auto result = sendCommand();
     if (result < 0)
-    QMessageBox::critical(this, "Ошибка порта", "Невозмоность записи в порт");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("Невозмоность записи в порт"));
     else
-        ui->label_10->setText("Получает данные");
+        ui->label_10->setText(tr("Получает данные"));
 }
 
 
 void COMportAdd::on_btnStop_clicked()
 {
     if (_serialPort == nullptr || !_serialPort->isOpen()){
-        QMessageBox::critical(this, "Ошибка порта", "порт не подключен");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("Порт не подключен"));
         return;
     }
     _struct.command = 0;
     auto result = sendCommand();
     if (result < 0)
-        QMessageBox::critical(this, "Ошибка порта", "Невозмоность записи в порт");
+        QMessageBox::critical(this, tr("Ошибка порта"), tr("Невозмоность записи в порт"));
     else
-        ui->label_10->setText("Подключен");
+        ui->label_10->setText(tr("Подключен"));
 }
 
 quint64 COMportAdd::sendCommand()
@@ -259,9 +284,6 @@ void COMportAdd::setupCompleters()
     // Изделие
     ui->lineEditProduct->setCompleter(createCompleter(m_dataManager.getProducts()));
 
-    // Проверяющий
-    ui->lineEditInspector->setCompleter(createCompleter(m_dataManager.getInspectors()));
-
     ui->cmbPoint->setEnabled(0);
 }
 
@@ -277,7 +299,6 @@ void COMportAdd::connectSignals()
     // Обработка выбора из списка
     connect(ui->lineEditProductSerial->completer(), QOverload<const QString &>::of(&QCompleter::activated),
             this, &COMportAdd::onProductSerialSelected);
-    connect(ui->lineEditInspector, &QLineEdit::editingFinished, this, &COMportAdd::validateInspector);
 }
 
 void COMportAdd::updateProductSerials()
@@ -325,13 +346,6 @@ void COMportAdd::validateProductSerial()
     }
 }
 
-void COMportAdd::validateInspector()
-{
-    QString text = ui->lineEditInspector->text();
-    if (!m_dataManager.getInspectors().contains(text, Qt::CaseInsensitive))
-        ui->lineEditInspector->clear();
-}
-
 void COMportAdd::onProductSerialSelected(const QString &text)
 {
     QString product = m_dataManager.productBySerial(text);
@@ -370,10 +384,9 @@ QString COMportAdd::searchDataDB(const QString &idName, const QString &data, con
     query.addBindValue(data);
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
-        return {}; // Возвращаем пустую строку вместо nullptr
+        return {};
     }
 
-    // Добавляем проверку наличия результатов
     if (query.next()) {
         return query.value(0).toString();
     } else {
@@ -385,7 +398,7 @@ QString COMportAdd::searchDataDB(const QString &idName, const QString &data, con
 
 void COMportAdd::on_cmbPorts_currentIndexChanged(int index)
 {
-    ui->label_10->setText("Отключен");
+    ui->label_10->setText(tr("Отключен"));
 }
 
 

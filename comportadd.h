@@ -36,7 +36,7 @@ class COMportAdd : public QDialog
     Q_OBJECT
 
 public:
-    explicit COMportAdd(QWidget *parent = nullptr);
+    explicit COMportAdd(QWidget *parent = nullptr, int userId = 0);
     ~COMportAdd();
 
 
@@ -65,6 +65,7 @@ private:
     CommandStruct _struct;
     DataManager m_dataManager;
     QStandardItemModel *dataModel;
+    int m_userId;
 
     void setupCompleters();
     void connectSignals();
@@ -85,7 +86,7 @@ private:
     void loadPorts();
     void processJson(const QByteArray &jsonData);
     bool validateMeasurement(double value, int placeId);
-    void saveToDatabase(double value, int placeId, int serial);
+    bool saveToDatabase(double value, int placeId, int serial);
     int getDeviceId(const QString &serial);
     int getPlaceId(const QString &plase);
     int checkQuantity(const int device_id, const QString &quantity);

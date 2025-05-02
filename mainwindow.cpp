@@ -1,9 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "adddatafile.h"
-#include "dataanalyze.h"
-#include "datacharts.h"
 #include "comportadd.h"
+#include "authdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     QFile file("./db.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << "Не удалось открыть файл!";
+        qWarning() << tr("Не удалось открыть файл!");
         return;
     }
 
@@ -42,7 +41,12 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
+    AuthDialog *authD = new AuthDialog(this, &admin, &userId);
+    if (authD->exec() != QDialog::DialogCode::Accepted)
+        QTimer::singleShot(0, this, SLOT(close()));
+
     QSqlQuery query(db);
+
 
     if (!query.exec("SELECT "
                 "M.value_measurement, "
@@ -98,11 +102,14 @@ MainWindow::MainWindow(QWidget *parent)
                 auto widget = ui->horizontalLayout->itemAt(index)->widget();
                 widget->setMaximumWidth(new_size - 5);
             });
+
+    setupMenu();
 }
 
 MainWindow::~MainWindow()
 {
-    db.close();
+    if (db.isOpen())
+        db.close();
     delete model;
     delete filModel;
     delete ui;
@@ -113,7 +120,6 @@ QWidget *MainWindow::create_filter_widget_by_scanning_column(const int &column) 
     auto widget = new QLineEdit();
     widget->setValidator(new QRegularExpressionValidator(QRegularExpression(".*")));
 
-    // Подключаем сигнал textChanged к слоту set_filter
     connect(widget, &QLineEdit::textChanged, this, [this, column](const QString &text) {
         filModel->set_filter(column, text);
     });
@@ -121,51 +127,43 @@ QWidget *MainWindow::create_filter_widget_by_scanning_column(const int &column) 
 }
 
 
-// Конструктор
 ScanningFilterModel::ScanningFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
 }
 
-// Установка фильтра для конкретного столбца
 void ScanningFilterModel::set_filter(int column, const QString &filter)
 {
-    m_filters[column] = filter; // Сохраняем фильтр для столбца
-    invalidateFilter();         // Обновляем фильтр
+    m_filters[column] = filter;
+    invalidateFilter();
 }
 
-// Метод фильтрации строк
 bool ScanningFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    // Проходим по всем столбцам, для которых заданы фильтры
     for (auto it = m_filters.constBegin(); it != m_filters.constEnd(); ++it) {
         int column = it.key();
         QString filter = it.value();
 
-        // Если фильтр пуст, пропускаем проверку для этого столбца
         if (filter.isEmpty()) {
             continue;
         }
 
-        // Получаем данные из столбца
         QModelIndex index = sourceModel()->index(sourceRow, column, sourceParent);
         QString data = sourceModel()->data(index).toString();
 
-        // Если данные не соответствуют фильтру, строка не отображается
         if (!data.contains(filter, Qt::CaseInsensitive)) {
             return false;
         }
     }
 
-    // Если все фильтры пройдены, строка отображается
     return true;
 }
 
 void MainWindow::on_action_triggered()
 {
-    AddDataFile* addDataFileDialog = new AddDataFile(this);
-    addDataFileDialog->show();
-
+    AddDataFile* addDataFileDialog = new AddDataFile(this, userId);
+    if (addDataFileDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
 }
 
 
@@ -175,25 +173,9 @@ void MainWindow::on_pushButton_clicked()
     close();
 }
 
-
-void MainWindow::on_action_4_triggered()
-{
-    DataAnalyze* DADialog = new DataAnalyze(this);
-    if (DADialog->exec() == QDialog::DialogCode::Rejected)
-        refreshScreen();
-}
-
-
-void MainWindow::on_action_5_triggered()
-{
-    DataCharts * DCDialog = new DataCharts(this);
-    DCDialog->show();
-}
-
-
 void MainWindow::on_action_2_triggered()
 {
-    COMportAdd *COMPDialog = new COMportAdd(this);
+    COMportAdd *COMPDialog = new COMportAdd(this, userId);
     if (COMPDialog->exec() == QDialog::DialogCode::Rejected)
         refreshScreen();
 }
@@ -223,3 +205,38 @@ void MainWindow::refreshScreen() {
     model->setQuery(std::move(query));
 }
 
+void MainWindow::setupMenu() {
+    QMenuBar *menuBar = this->menuBar();
+    menuBar->clear();
+
+    QMenu *fileMenu = menuBar->addMenu(tr("Файл"));
+    QAction *openFileAction = new QAction(tr("Открыть файл"), this);
+    QAction *openPortAction = new QAction(tr("Загрузить с устройства"), this);
+    QAction *exitAction = new QAction(tr("Выход"), this);
+    fileMenu->addAction(openFileAction);
+    fileMenu->addAction(openPortAction);
+    fileMenu->addAction(exitAction);
+    connect(openFileAction, &QAction::triggered, this, &MainWindow::on_action_triggered);
+    connect(openPortAction, &QAction::triggered, this, &MainWindow::on_action_2_triggered);
+    connect(exitAction, &QAction::triggered, this, &QMainWindow::close);
+
+    if(admin) {
+        QMenu *adminMenu = menuBar->addMenu(tr("&Administration"));
+        QAction *usersAction = new QAction(tr("User Management"), this);
+        QAction *logsAction = new QAction(tr("View Logs"), this);
+        adminMenu->addAction(usersAction);
+        adminMenu->addAction(logsAction);
+    }
+
+    QMenu *toolsMenu = menuBar->addMenu(tr("&Tools"));
+    QAction *settingsAction = new QAction(tr("Settings"), this);
+    toolsMenu->addAction(settingsAction);
+
+    QMenu *helpMenu = menuBar->addMenu(tr("&Help"));
+    if(admin) {
+        QAction *adminHelp = new QAction(tr("Admin Documentation"), this);
+        helpMenu->addAction(adminHelp);
+    }
+    QAction *aboutAction = new QAction(tr("About"), this);
+    helpMenu->addAction(aboutAction);
+}
