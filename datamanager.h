@@ -21,6 +21,7 @@ public:
     QStringList getInspectors() const;
     QStringList getAllInstrumentSerials() const;
     QStringList getAllProductSerials() const;
+    QStringList getPoints(const QString &name) const;
 
     QString instrumentBySerial(const QString &serial) const;
     QString productBySerial(const QString &serial) const;
@@ -30,6 +31,7 @@ private:
     QMap<QString, QStringList> m_products;
     QMap<QString, QString> m_serialToInstrument;
     QMap<QString, QString> m_serialToProduct;
+    QMap<QString, QStringList> m_points;
     QStringList m_inspectors;
     QStringList m_allInstrumentSerials;
     QStringList m_allProductSerials;

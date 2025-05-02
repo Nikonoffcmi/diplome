@@ -38,12 +38,27 @@ void DataManager::loadData()
     //     m_inspectors.append(inspectorQuery.value(0).toString());
     // }
 
+    // QSqlQuery query(
+    //     "SELECT name || ' ' || second_name || COALESCE(' ' || middle_name, '') "
+    //     "FROM person");
     QSqlQuery query(
-        "SELECT name || ' ' || second_name || COALESCE(' ' || middle_name, '') "
-        "FROM employee");
+        "SELECT second_name FROM person");
 
     while (query.next()) {
         m_inspectors << query.value(0).toString();
+    }
+
+    QSqlQuery pointsQuery(
+        "SELECT PT.name, MP.point FROM measuring_point MP \
+        JOIN place_measurement PM \
+        ON PM.id_measurement_point = MP.id_measuring_point \
+        JOIN product_type PT \
+        ON PT.id_product_type = PM.id_product_type;");
+
+    while (pointsQuery.next()) {
+        QString name = pointsQuery.value(0).toString();
+        QString point = pointsQuery.value(1).toString();
+        m_points[name].append(point);
     }
 }
 
@@ -62,6 +77,10 @@ QString DataManager::productBySerial(const QString &serial) const
 }
 
 QStringList DataManager::getInspectors() const { return m_inspectors; }
+
+QStringList DataManager::getPoints(const QString &names) const {
+    return m_points.value(names);
+}
 
 QStringList DataManager::getAllInstrumentSerials() const { return m_allInstrumentSerials; }
 QStringList DataManager::getAllProductSerials() const { return m_allProductSerials; }

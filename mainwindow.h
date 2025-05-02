@@ -69,6 +69,8 @@ private:
     QSqlDatabase db;
     QSqlQueryModel* model;
     ScanningFilterModel* filModel;
+
+    void refreshScreen();
 };
 
 

@@ -43,24 +43,29 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     QSqlQuery query(db);
-    query.exec("SELECT "
-               "M.value_measurement, "
-               "M.datetime, "
-               "MP.point AS measuring_point, "
-               "P.product_serial AS product_code, "
-               "PT.name AS product_name, "
-               "CASE WHEN M.quality_protective_layer THEN 'удовлетворительно' "
-               "ELSE 'неудовлетворительно' END AS quality_protective_layer, "
-               "Post.name AS post, "
-               "CONCAT(E.second_name, ' ', E.name) AS examiner_full_name "
-               "FROM measurement M "
-               "JOIN product P ON M.id_product = P.id_product "
-               "JOIN place_measurement PLM ON M.id_place_measurement = PLM.id_place_measurement "
-               "JOIN measuring_point MP ON PLM.id_measurement_point = MP.id_measuring_point "
-               "JOIN product_type PT ON P.id_product_type = PT.id_product_type "
-               "JOIN employment Emp ON M.id_employment = Emp.id_employment "
-               "JOIN employee E ON Emp.id_employee = E.id_employee "
-               "JOIN post Post ON Emp.id_post = Post.id_post;");
+
+    if (!query.exec("SELECT "
+                "M.value_measurement, "
+                "M.datetime + interval '7 hours' AS datetime, "
+                "MP.point AS measuring_point, "
+                "P.product_serial AS product_code, "
+                "PT.name AS product_name, "
+                "CASE WHEN M.quality_protective_layer THEN 'удовлетворительно' "
+                "ELSE 'неудовлетворительно' END AS quality_protective_layer, "
+                "Post.name AS post, "
+                "CONCAT(E.second_name, ' ', E.name) AS examiner_full_name "
+                "FROM measurement M "
+                "JOIN product P ON M.id_product = P.id_product "
+                "JOIN place_measurement PLM ON M.id_place_measurement = PLM.id_place_measurement "
+                "JOIN measuring_point MP ON PLM.id_measurement_point = MP.id_measuring_point "
+                "JOIN product_type PT ON P.id_product_type = PT.id_product_type "
+                "JOIN employee Emp ON M.id_employee = Emp.id_employee "
+                "JOIN person E ON Emp.id_person = E.id_person "
+                "JOIN post Post ON Emp.id_post = Post.id_post "
+                "ORDER BY datetime DESC;")) {
+        QMessageBox::critical(this, "Database Error", query.lastError().text());
+        return;
+    }
 
     model = new QSqlQueryModel();
     model->setQuery(std::move(query));
@@ -174,7 +179,8 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_action_4_triggered()
 {
     DataAnalyze* DADialog = new DataAnalyze(this);
-    DADialog->show();
+    if (DADialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
 }
 
 
@@ -188,6 +194,32 @@ void MainWindow::on_action_5_triggered()
 void MainWindow::on_action_2_triggered()
 {
     COMportAdd *COMPDialog = new COMportAdd(this);
-    COMPDialog->show();
+    if (COMPDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
+void MainWindow::refreshScreen() {
+    QSqlQuery query(db);
+    query.exec("SELECT "
+               "M.value_measurement, "
+               "M.datetime + interval '7 hours' AS datetime, "
+               "MP.point AS measuring_point, "
+               "P.product_serial AS product_code, "
+               "PT.name AS product_name, "
+               "CASE WHEN M.quality_protective_layer THEN 'удовлетворительно' "
+               "ELSE 'неудовлетворительно' END AS quality_protective_layer, "
+               "Post.name AS post, "
+               "CONCAT(E.second_name, ' ', E.name) AS examiner_full_name "
+               "FROM measurement M "
+               "JOIN product P ON M.id_product = P.id_product "
+               "JOIN place_measurement PLM ON M.id_place_measurement = PLM.id_place_measurement "
+               "JOIN measuring_point MP ON PLM.id_measurement_point = MP.id_measuring_point "
+               "JOIN product_type PT ON P.id_product_type = PT.id_product_type "
+               "JOIN employee Emp ON M.id_employee = Emp.id_employee "
+               "JOIN person E ON Emp.id_person = E.id_person "
+               "JOIN post Post ON Emp.id_post = Post.id_post "
+               "ORDER BY datetime DESC;");
+
+    model->setQuery(std::move(query));
 }
 
