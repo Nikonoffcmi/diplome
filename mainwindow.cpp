@@ -4,6 +4,8 @@
 #include "comportadd.h"
 #include "authdialog.h"
 #include "exportdialog.h"
+#include "reportcreate.h"
+#include "htmleditordialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -181,11 +183,23 @@ void MainWindow::on_action_2_triggered()
         refreshScreen();
 }
 
-void MainWindow::on_action_SaveFile_triggered()
+void MainWindow::on_actionSaveFileTriggered()
 {
     ExportDialog *exportDialog = new ExportDialog(this);
     if (exportDialog->exec() == QDialog::DialogCode::Rejected)
         refreshScreen();
+}
+
+void MainWindow::on_actionReportPDFTriggered()
+{
+    ReportCreate *reportDialog = new ReportCreate(this);
+    if (reportDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
+void MainWindow::on_actionHTMLTriggered()
+{
+
 }
 
 void MainWindow::refreshScreen() {
@@ -227,17 +241,20 @@ void MainWindow::setupMenu() {
     fileMenu->addAction(exportAction);
     fileMenu->addAction(exitAction);
     connect(openFileAction, &QAction::triggered, this, &MainWindow::on_action_triggered);
-    connect(exportAction, &QAction::triggered, this, &MainWindow::on_action_SaveFile_triggered);
+    connect(exportAction, &QAction::triggered, this, &MainWindow::on_actionSaveFileTriggered);
     connect(openPortAction, &QAction::triggered, this, &MainWindow::on_action_2_triggered);
     connect(exitAction, &QAction::triggered, this, &QMainWindow::close);
 
-    if(admin) {
-        QMenu *adminMenu = menuBar->addMenu(tr("&Administration"));
-        QAction *usersAction = new QAction(tr("User Management"), this);
-        QAction *logsAction = new QAction(tr("View Logs"), this);
-        adminMenu->addAction(usersAction);
-        adminMenu->addAction(logsAction);
-    }
+
+    QMenu *reportMenu = menuBar->addMenu(tr("Отчет"));
+    QAction *pdfAction = new QAction(tr("формат pdf"), this);
+    QAction *htmlAction = new QAction(tr("Редактировать HTML"), this);
+
+    reportMenu->addAction(pdfAction);
+    reportMenu->addAction(htmlAction);
+
+    connect(pdfAction, &QAction::triggered, this, &MainWindow::on_actionReportPDFTriggered);
+    connect(htmlAction, &QAction::triggered, this, &MainWindow::on_actionHTMLTriggered);
 
     QMenu *toolsMenu = menuBar->addMenu(tr("&Tools"));
     QAction *settingsAction = new QAction(tr("Settings"), this);

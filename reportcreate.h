@@ -6,21 +6,19 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDateTime>
+#include <QTextEdit>
+#include <QTextDocument>
 
 namespace Ui {
 class ReportCreate;
 }
 
-struct ActData {
-    QString productSerial;
-    QString batchNumber;
-    QString productType;
-    QList<double> measurements;
-    QList<QString> measurementPoints;
-    QString inspectorName;
-    QString deviceSerial;
-    QDateTime measureDateTime;
-    bool qualityStatus;
+struct MeasurementData {
+    double value;
+    QString point;
+    QString device;
+    bool quality;
+    QString inspector;
 };
 
 class ReportCreate : public QDialog
@@ -31,10 +29,17 @@ public:
     explicit ReportCreate(QWidget *parent = nullptr);
     ~ReportCreate();
 
-    ActData fetchActData(int productId);
-
 private:
     Ui::ReportCreate *ui;
+    QTextEdit *htmlPreview;
+    QString currentHtml;
+
+    void loadProducts();
+    QVector<MeasurementData> getMeasurements(int productId);
+    void openHtmlEditor();
+    void printPdf();
+    void generateHtmlPreview(int productId);
+    void saveEditedPdf();
 };
 
 #endif // REPORTCREATE_H
