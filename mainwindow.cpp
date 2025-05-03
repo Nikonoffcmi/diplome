@@ -3,6 +3,7 @@
 #include "adddatafile.h"
 #include "comportadd.h"
 #include "authdialog.h"
+#include "exportdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -180,6 +181,13 @@ void MainWindow::on_action_2_triggered()
         refreshScreen();
 }
 
+void MainWindow::on_action_SaveFile_triggered()
+{
+    ExportDialog *exportDialog = new ExportDialog(this);
+    if (exportDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
 void MainWindow::refreshScreen() {
     QSqlQuery query(db);
     query.exec("SELECT "
@@ -212,11 +220,14 @@ void MainWindow::setupMenu() {
     QMenu *fileMenu = menuBar->addMenu(tr("Файл"));
     QAction *openFileAction = new QAction(tr("Открыть файл"), this);
     QAction *openPortAction = new QAction(tr("Загрузить с устройства"), this);
+    QAction *exportAction = new QAction(tr("Сохранить"), this);
     QAction *exitAction = new QAction(tr("Выход"), this);
     fileMenu->addAction(openFileAction);
     fileMenu->addAction(openPortAction);
+    fileMenu->addAction(exportAction);
     fileMenu->addAction(exitAction);
     connect(openFileAction, &QAction::triggered, this, &MainWindow::on_action_triggered);
+    connect(exportAction, &QAction::triggered, this, &MainWindow::on_action_SaveFile_triggered);
     connect(openPortAction, &QAction::triggered, this, &MainWindow::on_action_2_triggered);
     connect(exitAction, &QAction::triggered, this, &QMainWindow::close);
 

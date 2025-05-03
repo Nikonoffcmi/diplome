@@ -13,6 +13,7 @@ SOURCES += \
     authdialog.cpp \
     comportadd.cpp \
     datamanager.cpp \
+    exportdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     reportcreate.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     authdialog.h \
     comportadd.h \
     datamanager.h \
+    exportdialog.h \
     mainwindow.h \
     reportcreate.h
 
@@ -29,6 +31,7 @@ FORMS += \
     adddatafile.ui \
     authdialog.ui \
     comportadd.ui \
+    exportdialog.ui \
     mainwindow.ui \
     reportcreate.ui
 

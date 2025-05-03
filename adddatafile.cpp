@@ -1,10 +1,7 @@
 #include "adddatafile.h"
 #include "ui_adddatafile.h"
 #include "xlsxdocument.h"
-#include "xlsxchartsheet.h"
-#include "xlsxcellrange.h"
 #include "xlsxchart.h"
-#include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 
 
