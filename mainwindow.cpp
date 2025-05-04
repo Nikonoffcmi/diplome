@@ -1,4 +1,8 @@
 #include "mainwindow.h"
+#include "measurementdeviceform.h"
+#include "productform.h"
+#include "productmanagementform.h"
+#include "settingsdialog.h"
 #include "ui_mainwindow.h"
 #include "adddatafile.h"
 #include "comportadd.h"
@@ -209,6 +213,34 @@ void MainWindow::on_actionEmployeeTriggered()
         refreshScreen();
 }
 
+void MainWindow::on_actionProductTypeTriggered()
+{
+    ProductManagementForm *productDialog = new ProductManagementForm(admin, this);
+    if (productDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
+void MainWindow::on_actionProductTriggered()
+{
+    ProductForm *productDialog = new ProductForm(admin, this);
+    if (productDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
+void MainWindow::on_actionDeviceTriggered()
+{
+    MeasurementDeviceForm *deviceDialog = new MeasurementDeviceForm(admin, this);
+    if (deviceDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
+void MainWindow::on_actionSettingsTriggered()
+{
+    SettingsDialog *settingsDialog = new SettingsDialog(this);
+    if (settingsDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
 void MainWindow::refreshScreen() {
     QSqlQuery query(db);
     query.exec("SELECT "
@@ -232,6 +264,7 @@ void MainWindow::refreshScreen() {
                "ORDER BY datetime DESC;");
 
     model->setQuery(std::move(query));
+    ui->retranslateUi(this);
 }
 
 void MainWindow::setupMenu() {
@@ -266,22 +299,36 @@ void MainWindow::setupMenu() {
 
     QMenu *booksMenu = menuBar->addMenu(tr("Справочники"));
     QAction *EmployeeAction = new QAction(tr("Сотрудники"), this);
+    QAction *productAction = new QAction(tr("Изделия"), this);
+    QAction *deviceAction = new QAction(tr("Приборы"), this);
+
 
     booksMenu->addAction(EmployeeAction);
-
-    connect(EmployeeAction, &QAction::triggered, this, &MainWindow::on_actionEmployeeTriggered);
-
+    booksMenu->addAction(productAction);
 
     if(admin) {
-        QAction *adminHelp = new QAction(tr("Admin Documentation"), this);
-        // helpMenu->addAction(adminHelp);
+        QAction *productTypeAction = new QAction(tr("Тип Изделия"), this);
+        booksMenu->addAction(productTypeAction);
+        connect(productTypeAction, &QAction::triggered, this, &MainWindow::on_actionProductTypeTriggered);
     }
+
+    booksMenu->addAction(deviceAction);
+
+    connect(EmployeeAction, &QAction::triggered, this, &MainWindow::on_actionEmployeeTriggered);
+    connect(productAction, &QAction::triggered, this, &MainWindow::on_actionProductTriggered);
+    connect(deviceAction, &QAction::triggered, this, &MainWindow::on_actionDeviceTriggered);
+
+
 
 
 
     QMenu *toolsMenu = menuBar->addMenu(tr("Средства"));
     QAction *settingsAction = new QAction(tr("Настройки"), this);
+
     toolsMenu->addAction(settingsAction);
+
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::on_actionSettingsTriggered);
+
 
 
 

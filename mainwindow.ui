@@ -90,7 +90,21 @@
      <string>Измерения толщены защитного покрытия:</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>9</y>
+      <width>471</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Измерения толщены защитного покрытия:</string>
+    </property>
+   </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -133,7 +147,6 @@
    <addaction name="menu_5"/>
    <addaction name="menu_6"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="action">
    <property name="text">
     <string>Открать файл</string>

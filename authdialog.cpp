@@ -24,6 +24,9 @@ AuthDialog::AuthDialog(QWidget *parent, bool *admin, int *userId)
 
 AuthDialog::~AuthDialog()
 {
+
+    QApplication::removeTranslator(&translator);
+
     delete ui;
 }
 
@@ -62,7 +65,7 @@ void AuthDialog::on_loginButton_clicked()
 void AuthDialog::on_languageCombo_currentIndexChanged(int index)
 {
     QString lang = (index == 0) ? "ru_RU" : "en_US";
-    translator.load(":/diplome_" + lang + ".qm");
+    translator.load("diplome_" + lang + ".qm");
     updateUI();
 }
 
@@ -70,7 +73,7 @@ void AuthDialog::loadTranslations()
 {
     ui->languageCombo->addItem("Русский");
     ui->languageCombo->addItem("English");
-    translator.load(":/diplome_ru_RU.qm");
+    translator.load("diplome_ru_RU.qm");
     qApp->installTranslator(&translator);
 }
 

@@ -61,12 +61,13 @@ private slots:
     void on_action_2_triggered();
 
     void on_actionSaveFileTriggered();
-
     void on_actionReportPDFTriggered();
-
     void on_actionHTMLTriggered();
-
     void on_actionEmployeeTriggered();
+    void on_actionProductTypeTriggered();
+    void on_actionProductTriggered();
+    void on_actionDeviceTriggered();
+    void on_actionSettingsTriggered();
 
 private:
     Ui::MainWindow *ui;

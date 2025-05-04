@@ -18,7 +18,11 @@ SOURCES += \
     htmleditordialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    reportcreate.cpp
+    measurementdeviceform.cpp \
+    productform.cpp \
+    productmanagementform.cpp \
+    reportcreate.cpp \
+    settingsdialog.cpp
 
 HEADERS += \
     adddatafile.h \
@@ -29,7 +33,11 @@ HEADERS += \
     exportdialog.h \
     htmleditordialog.h \
     mainwindow.h \
-    reportcreate.h
+    measurementdeviceform.h \
+    productform.h \
+    productmanagementform.h \
+    reportcreate.h \
+    settingsdialog.h
 
 FORMS += \
     adddatafile.ui \
@@ -39,12 +47,16 @@ FORMS += \
     exportdialog.ui \
     htmleditordialog.ui \
     mainwindow.ui \
-    reportcreate.ui
+    measurementdeviceform.ui \
+    productform.ui \
+    productmanagementform.ui \
+    reportcreate.ui \
+    settingsdialog.ui
 
 TRANSLATIONS += \
     diplome_en_US.ts \
     diplome_ru_RU.ts
-# CONFIG += lrelease
+CONFIG += lrelease
 # CONFIG += embed_translations
 
 # Default rules for deployment.
