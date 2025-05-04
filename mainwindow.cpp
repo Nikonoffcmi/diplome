@@ -5,7 +5,7 @@
 #include "authdialog.h"
 #include "exportdialog.h"
 #include "reportcreate.h"
-#include "htmleditordialog.h"
+#include "employeeform.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -202,6 +202,13 @@ void MainWindow::on_actionHTMLTriggered()
 
 }
 
+void MainWindow::on_actionEmployeeTriggered()
+{
+    EmployeeForm *employeeDialog = new EmployeeForm(admin, userId, this);
+    if (employeeDialog->exec() == QDialog::DialogCode::Rejected)
+        refreshScreen();
+}
+
 void MainWindow::refreshScreen() {
     QSqlQuery query(db);
     query.exec("SELECT "
@@ -256,15 +263,32 @@ void MainWindow::setupMenu() {
     connect(pdfAction, &QAction::triggered, this, &MainWindow::on_actionReportPDFTriggered);
     connect(htmlAction, &QAction::triggered, this, &MainWindow::on_actionHTMLTriggered);
 
-    QMenu *toolsMenu = menuBar->addMenu(tr("&Tools"));
-    QAction *settingsAction = new QAction(tr("Settings"), this);
-    toolsMenu->addAction(settingsAction);
 
-    QMenu *helpMenu = menuBar->addMenu(tr("&Help"));
+    QMenu *booksMenu = menuBar->addMenu(tr("Справочники"));
+    QAction *EmployeeAction = new QAction(tr("Сотрудники"), this);
+
+    booksMenu->addAction(EmployeeAction);
+
+    connect(EmployeeAction, &QAction::triggered, this, &MainWindow::on_actionEmployeeTriggered);
+
+
     if(admin) {
         QAction *adminHelp = new QAction(tr("Admin Documentation"), this);
-        helpMenu->addAction(adminHelp);
+        // helpMenu->addAction(adminHelp);
     }
-    QAction *aboutAction = new QAction(tr("About"), this);
+
+
+
+    QMenu *toolsMenu = menuBar->addMenu(tr("Средства"));
+    QAction *settingsAction = new QAction(tr("Настройки"), this);
+    toolsMenu->addAction(settingsAction);
+
+
+
+    QMenu *helpMenu = menuBar->addMenu(tr("Справка"));
+
+    QAction *aboutAction = new QAction(tr("О программе"), this);
+    QAction *toolAction = new QAction(tr("Вызов справки"), this);
+    helpMenu->addAction(toolAction);
     helpMenu->addAction(aboutAction);
 }

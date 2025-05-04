@@ -13,6 +13,7 @@ SOURCES += \
     authdialog.cpp \
     comportadd.cpp \
     datamanager.cpp \
+    employeeform.cpp \
     exportdialog.cpp \
     htmleditordialog.cpp \
     main.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     authdialog.h \
     comportadd.h \
     datamanager.h \
+    employeeform.h \
     exportdialog.h \
     htmleditordialog.h \
     mainwindow.h \
@@ -33,6 +35,7 @@ FORMS += \
     adddatafile.ui \
     authdialog.ui \
     comportadd.ui \
+    employeeform.ui \
     exportdialog.ui \
     htmleditordialog.ui \
     mainwindow.ui \
