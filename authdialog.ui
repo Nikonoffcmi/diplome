@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>285</width>
+    <width>341</width>
     <height>313</height>
    </rect>
   </property>
@@ -16,9 +16,9 @@
   <widget class="QLineEdit" name="usernameEdit">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>100</x>
      <y>90</y>
-     <width>151</width>
+     <width>191</width>
      <height>28</height>
     </rect>
    </property>
@@ -26,9 +26,9 @@
   <widget class="QLineEdit" name="passwordEdit">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>100</x>
      <y>150</y>
-     <width>151</width>
+     <width>191</width>
      <height>28</height>
     </rect>
    </property>
@@ -39,7 +39,7 @@
   <widget class="QComboBox" name="languageCombo">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>190</x>
      <y>275</y>
      <width>101</width>
      <height>28</height>
@@ -49,8 +49,8 @@
   <widget class="QPushButton" name="loginButton">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>220</y>
+     <x>210</x>
+     <y>210</y>
      <width>83</width>
      <height>29</height>
     </rect>
@@ -64,18 +64,18 @@
     <rect>
      <x>30</x>
      <y>50</y>
-     <width>131</width>
+     <width>281</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>Пожалуйста, введите логин и пароль</string>
    </property>
   </widget>
   <widget class="QLabel" name="layoutLabel">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>30</x>
      <y>10</y>
      <width>251</width>
      <height>31</height>
@@ -93,7 +93,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>30</x>
      <y>92</y>
      <width>63</width>
      <height>20</height>
@@ -106,7 +106,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>30</x>
      <y>152</y>
      <width>63</width>
      <height>20</height>
@@ -119,7 +119,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>70</x>
      <y>278</y>
      <width>131</width>
      <height>20</height>

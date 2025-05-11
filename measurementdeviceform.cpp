@@ -27,13 +27,14 @@ void MeasurementDeviceForm::setupUI() {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     tabs = new QTabWidget;
 
+
+    setupDeviceTab();
     if(isAdmin) {
+        setupDeviceModelTab();
         setupManufacturerTab();
         setupMeasurementValueTab();
         setupCharacteristicsTab();
-        setupDeviceModelTab();
     }
-    setupDeviceTab();
 
     mainLayout->addWidget(tabs);
 
@@ -67,6 +68,7 @@ void MeasurementDeviceForm::setupManufacturerTab() {
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
     model->setHeaderData(1, Qt::Horizontal, "Производитель");
 
     tabs->addTab(tab, "Производители");
@@ -82,6 +84,7 @@ void MeasurementDeviceForm::setupMeasurementValueTab() {
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
     model->setHeaderData(1, Qt::Horizontal, "Измерительная величина");
 
     tabs->addTab(tab, "Величины");
@@ -99,6 +102,7 @@ void MeasurementDeviceForm::setupCharacteristicsTab() {
     view->setModel(model);
     view->setColumnHidden(0, true);
     view->setItemDelegate(new QSqlRelationalDelegate(view));
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     tabs->addTab(tab, "Характеристики");
     (new QVBoxLayout(tab))->addWidget(view);
@@ -116,6 +120,7 @@ void MeasurementDeviceForm::setupDeviceModelTab() {
     view->setModel(model);
     view->setColumnHidden(0, true);
     view->setItemDelegate(new QSqlRelationalDelegate(view));
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     tabs->addTab(tab, "Модели");
     (new QVBoxLayout(tab))->addWidget(view);
@@ -165,6 +170,7 @@ void MeasurementDeviceForm::setupDeviceTab() {
         }
     }
 
+    deviceView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
     layout->addWidget(deviceView);
     tabs->addTab(tab, "Приборы");
 }

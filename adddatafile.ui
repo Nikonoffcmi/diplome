@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>907</width>
-    <height>549</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="CloseBtn">
    <property name="geometry">
     <rect>
-     <x>808</x>
-     <y>500</y>
+     <x>358</x>
+     <y>380</y>
      <width>83</width>
      <height>29</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="AccBtn">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>500</y>
+     <x>240</x>
+     <y>380</y>
      <width>91</width>
      <height>29</height>
     </rect>
@@ -59,7 +59,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Измерительный прибор:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Измерительный прибор:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -72,41 +72,41 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер прибора:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер прибора:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>20</x>
      <y>190</y>
      <width>181</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>250</y>
      <width>191</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEditDevice">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>210</x>
      <y>70</y>
-     <width>211</width>
+     <width>231</width>
      <height>28</height>
     </rect>
    </property>
@@ -114,9 +114,9 @@
   <widget class="QLineEdit" name="lineEditDeviceSerial">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>210</x>
      <y>130</y>
-     <width>211</width>
+     <width>231</width>
      <height>28</height>
     </rect>
    </property>
@@ -124,9 +124,9 @@
   <widget class="QLineEdit" name="lineEditProduct">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>210</x>
      <y>190</y>
-     <width>211</width>
+     <width>231</width>
      <height>28</height>
     </rect>
    </property>
@@ -134,9 +134,9 @@
   <widget class="QLineEdit" name="lineEditProductSerial">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>210</x>
      <y>250</y>
-     <width>211</width>
+     <width>231</width>
      <height>28</height>
     </rect>
    </property>

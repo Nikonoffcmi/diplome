@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>922</width>
-    <height>487</height>
+    <height>413</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Загрузка с устройства</string>
   </property>
   <widget class="QComboBox" name="cmbPorts">
    <property name="geometry">
@@ -26,9 +26,9 @@
   <widget class="QPushButton" name="btnOpenPort">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>80</y>
-     <width>121</width>
+     <x>10</x>
+     <y>120</y>
+     <width>111</width>
      <height>29</height>
     </rect>
    </property>
@@ -39,9 +39,9 @@
   <widget class="QPushButton" name="btnStart">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>140</x>
      <y>120</y>
-     <width>111</width>
+     <width>101</width>
      <height>29</height>
     </rect>
    </property>
@@ -52,9 +52,9 @@
   <widget class="QPushButton" name="btnStop">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>300</x>
      <y>120</y>
-     <width>121</width>
+     <width>111</width>
      <height>29</height>
     </rect>
    </property>
@@ -65,7 +65,7 @@
   <widget class="QPushButton" name="btnAddData">
    <property name="geometry">
     <rect>
-     <x>810</x>
+     <x>700</x>
      <y>360</y>
      <width>83</width>
      <height>29</height>
@@ -103,15 +103,15 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEditProduct">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>180</x>
      <y>200</y>
-     <width>211</width>
+     <width>251</width>
      <height>28</height>
     </rect>
    </property>
@@ -119,22 +119,22 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>200</y>
      <width>181</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEditProductSerial">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>180</x>
      <y>260</y>
-     <width>211</width>
+     <width>251</width>
      <height>28</height>
     </rect>
    </property>
@@ -162,15 +162,15 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Точка измерния:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Точка измерния:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QComboBox" name="cmbPoint">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>180</x>
      <y>310</y>
-     <width>211</width>
+     <width>251</width>
      <height>28</height>
     </rect>
    </property>
@@ -201,7 +201,7 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>140</x>
      <y>80</y>
      <width>171</width>
      <height>20</height>
@@ -214,8 +214,8 @@
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>125</y>
+     <x>300</x>
+     <y>82</y>
      <width>161</width>
      <height>20</height>
     </rect>
@@ -228,7 +228,7 @@
    <property name="geometry">
     <rect>
      <x>810</x>
-     <y>430</y>
+     <y>360</y>
      <width>83</width>
      <height>29</height>
     </rect>

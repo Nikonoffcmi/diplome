@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
-    QTranslator appTranslator;
+    QTranslator *appTranslator;
     void loadSettings();
     void saveSettings();
     void updateFont(const QFont &font);

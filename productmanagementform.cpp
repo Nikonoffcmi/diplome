@@ -1,4 +1,5 @@
 #include "productmanagementform.h"
+#include "qheaderview.h"
 #include "qsqlerror.h"
 #include "ui_productmanagementform.h"
 #include <QVBoxLayout>
@@ -21,7 +22,7 @@ ProductManagementForm::ProductManagementForm(bool isAdmin, QWidget *parent)
 
     if(isAdmin) {
         setupProductTypeTab();
-        setupBatchTab();
+        // setupBatchTab();
         setupMeasuringPointTab();
         setupPlaceMeasurementTab();
     } else {
@@ -59,6 +60,7 @@ void ProductManagementForm::setupProductTypeTab() {
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     modelsMap["Типы изделий"] = model;
     layout->addWidget(view);
@@ -77,6 +79,7 @@ void ProductManagementForm::setupBatchTab() {
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     modelsMap["Партии"] = model;
     layout->addWidget(view);
@@ -95,6 +98,7 @@ void ProductManagementForm::setupMeasuringPointTab() {
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     modelsMap["Точки измерения"] = model;
     layout->addWidget(view);
@@ -120,6 +124,7 @@ void ProductManagementForm::setupPlaceMeasurementTab() {
     view->setModel(model);
     view->setColumnHidden(0, true);
     view->setItemDelegate(new QSqlRelationalDelegate(view));
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     modelsMap["Места измерений"] = model;
     layout->addWidget(view);

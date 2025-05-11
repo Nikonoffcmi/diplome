@@ -1,5 +1,6 @@
 #include "productform.h"
 #include "qformlayout.h"
+#include "qheaderview.h"
 #include "qsqlerror.h"
 #include "qsqlquery.h"
 #include "ui_productform.h"
@@ -71,7 +72,8 @@ void ProductForm::setupModel() {
     model->setHeaderData(3, Qt::Horizontal, "Партия", Qt::DisplayRole);
 
     view->setModel(model);
-    view->setColumnHidden(0, true); // Скрываем ID
+    view->setColumnHidden(0, true);
+    view->setColumnHidden(3, true);
 
     view->setItemDelegateForColumn(2, new QSqlRelationalDelegate(view));
 
@@ -88,6 +90,7 @@ void ProductForm::setupModel() {
         }
     };
     view->setItemDelegateForColumn(3, new BatchDelegate());
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 }
 
 void ProductForm::setupConnections() {

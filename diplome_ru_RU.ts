@@ -20,22 +20,26 @@
     </message>
     <message>
         <location filename="adddatafile.ui" line="62"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Измерительный прибор:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Измерительный прибор:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Измерительный прибор:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="adddatafile.ui" line="75"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер прибора:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер прибора:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер прибора:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="adddatafile.ui" line="88"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="adddatafile.ui" line="101"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -102,8 +106,8 @@
     </message>
     <message>
         <location filename="authdialog.ui" line="72"/>
-        <source>TextLabel</source>
-        <translation></translation>
+        <source>Пожалуйста, введите логин и пароль</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="authdialog.ui" line="90"/>
@@ -147,18 +151,13 @@
         <source>Неверный логин или пароль</source>
         <translation></translation>
     </message>
-    <message>
-        <location filename="authdialog.cpp" line="90"/>
-        <source>Caps Lock is ON</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>COMportAdd</name>
     <message>
         <location filename="comportadd.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Настройки</translation>
     </message>
     <message>
         <location filename="comportadd.ui" line="36"/>
@@ -187,13 +186,14 @@
     </message>
     <message>
         <location filename="comportadd.ui" line="106"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Серийный номер изделия:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="comportadd.ui" line="129"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Проверяющий:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Изделие:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -203,7 +203,8 @@
     </message>
     <message>
         <location filename="comportadd.ui" line="165"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Точка измерния:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Точка измерния:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <oldsource>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Точка измерния:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -355,7 +356,7 @@
     <name>EmployeeForm</name>
     <message>
         <location filename="employeeform.ui" line="14"/>
-        <source>Dialog</source>
+        <source>Сотрудники</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -500,7 +501,7 @@
     <message>
         <location filename="htmleditordialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Настройки</translation>
     </message>
     <message>
         <location filename="htmleditordialog.cpp" line="15"/>
@@ -532,56 +533,56 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="90"/>
-        <location filename="mainwindow.ui" line="103"/>
-        <source>Измерения толщены защитного покрытия:</source>
-        <translation></translation>
+        <source>Измерения толщены защитного покрытия</source>
+        <oldsource>Измерения толщены защитного покрытия:</oldsource>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="119"/>
-        <location filename="mainwindow.cpp" line="273"/>
+        <location filename="mainwindow.ui" line="106"/>
+        <location filename="mainwindow.cpp" line="275"/>
         <source>Файл</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="126"/>
-        <location filename="mainwindow.cpp" line="288"/>
+        <location filename="mainwindow.ui" line="113"/>
+        <location filename="mainwindow.cpp" line="313"/>
         <source>Отчет</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="131"/>
+        <location filename="mainwindow.ui" line="118"/>
         <source>Сохнанить</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="136"/>
+        <location filename="mainwindow.ui" line="123"/>
         <source>Настройка</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="141"/>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.cpp" line="336"/>
         <source>Справка</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="152"/>
+        <location filename="mainwindow.ui" line="139"/>
         <source>Открать файл</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="157"/>
+        <location filename="mainwindow.ui" line="144"/>
         <source>Анализ данных</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="162"/>
+        <location filename="mainwindow.ui" line="149"/>
         <source>Графики</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="167"/>
-        <location filename="mainwindow.cpp" line="275"/>
+        <location filename="mainwindow.ui" line="154"/>
+        <location filename="mainwindow.cpp" line="277"/>
         <source>Загрузить с устройства</source>
         <translation></translation>
     </message>
@@ -591,72 +592,72 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="274"/>
+        <location filename="mainwindow.cpp" line="276"/>
         <source>Открыть файл</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="276"/>
+        <location filename="mainwindow.cpp" line="278"/>
         <source>Сохранить</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="277"/>
+        <location filename="mainwindow.cpp" line="279"/>
         <source>Выход</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="289"/>
+        <location filename="mainwindow.cpp" line="314"/>
         <source>формат pdf</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="290"/>
+        <location filename="mainwindow.cpp" line="315"/>
         <source>Редактировать HTML</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="299"/>
+        <location filename="mainwindow.cpp" line="291"/>
         <source>Справочники</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="300"/>
+        <location filename="mainwindow.cpp" line="292"/>
         <source>Сотрудники</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="301"/>
+        <location filename="mainwindow.cpp" line="293"/>
         <source>Изделия</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="302"/>
+        <location filename="mainwindow.cpp" line="294"/>
         <source>Приборы</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="309"/>
+        <location filename="mainwindow.cpp" line="301"/>
         <source>Тип Изделия</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="324"/>
+        <location filename="mainwindow.cpp" line="326"/>
         <source>Средства</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="325"/>
+        <location filename="mainwindow.cpp" line="327"/>
         <source>Настройки</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="336"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>О программе</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="337"/>
+        <location filename="mainwindow.cpp" line="339"/>
         <source>Вызов справки</source>
         <translation></translation>
     </message>
@@ -665,7 +666,7 @@
     <name>MeasurementDeviceForm</name>
     <message>
         <location filename="measurementdeviceform.ui" line="14"/>
-        <source>Dialog</source>
+        <source>Справочник измерительных приборов</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -673,7 +674,7 @@
     <name>ProductForm</name>
     <message>
         <location filename="productform.ui" line="14"/>
-        <source>Dialog</source>
+        <source>Справочник изделий</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -681,66 +682,71 @@
     <name>ProductManagementForm</name>
     <message>
         <location filename="productmanagementform.ui" line="14"/>
-        <source>Dialog</source>
+        <source>Справочник типов изделий</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ReportCreate</name>
     <message>
-        <location filename="reportcreate.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="reportcreate.ui" line="52"/>
+        <location filename="reportcreate.ui" line="75"/>
         <source>Печать</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.ui" line="75"/>
+        <location filename="reportcreate.ui" line="61"/>
         <source>Обновить превью</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.ui" line="88"/>
+        <location filename="reportcreate.ui" line="14"/>
+        <source>Создать отчет</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="reportcreate.ui" line="44"/>
+        <source>Выберите изделие</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="reportcreate.ui" line="68"/>
         <source>Сохранить PDF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.ui" line="101"/>
+        <location filename="reportcreate.ui" line="26"/>
         <source>Редактировать HTML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="174"/>
-        <location filename="reportcreate.cpp" line="189"/>
+        <location filename="reportcreate.cpp" line="175"/>
+        <location filename="reportcreate.cpp" line="190"/>
         <source>Ошибка</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="174"/>
+        <location filename="reportcreate.cpp" line="175"/>
         <source>Не удалось начать запись в PDF: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="187"/>
-        <location filename="reportcreate.cpp" line="200"/>
+        <location filename="reportcreate.cpp" line="188"/>
+        <location filename="reportcreate.cpp" line="201"/>
         <source>Успешно</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="187"/>
+        <location filename="reportcreate.cpp" line="188"/>
         <source>Файл сохранен: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="189"/>
+        <location filename="reportcreate.cpp" line="190"/>
         <source>Не удалось сохранить файл</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="reportcreate.cpp" line="200"/>
+        <location filename="reportcreate.cpp" line="201"/>
         <source>HTML обновлен! Не забудьте сохранить PDF.</source>
         <translation type="unfinished"></translation>
     </message>

@@ -132,7 +132,7 @@ void COMportAdd::on_btnAddData_clicked()
             return;
         }
     }
-    QMessageBox::information(this, tr("Успех"), tr("Данные дабавленные в базу данных!"));
+    QMessageBox::information(this, tr("Успех"), tr("Данные добавлены!"));
 }
 
 

@@ -19,6 +19,8 @@ struct MeasurementData {
     QString device;
     bool quality;
     QString inspector;
+    double max;
+    double min;
 };
 
 class ReportCreate : public QDialog

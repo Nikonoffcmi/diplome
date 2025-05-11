@@ -62,12 +62,12 @@ void SettingsDialog::updateFont(const QFont &font)
 
 void SettingsDialog::updateLanguage(const QString &language)
 {
-
+    appTranslator = new QTranslator(qApp);
     QString lang = (language == "ru_RU") ? "ru_RU" : "en_US";
-    qDebug() << language;
-    appTranslator.load("diplome_" + lang + ".qm");
-    qApp->installTranslator(&appTranslator);
-    ui->retranslateUi(this);
+    if (appTranslator->load("diplome_" + lang + ".qm")) {
+        qApp->installTranslator(appTranslator);
+        ui->retranslateUi(this);
+    }
 }
 
 void SettingsDialog::loadLanguages()

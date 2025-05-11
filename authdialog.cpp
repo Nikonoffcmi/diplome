@@ -25,7 +25,7 @@ AuthDialog::AuthDialog(QWidget *parent, bool *admin, int *userId)
 AuthDialog::~AuthDialog()
 {
 
-    QApplication::removeTranslator(&translator);
+    qApp->removeTranslator(&translator);
 
     delete ui;
 }
@@ -65,8 +65,9 @@ void AuthDialog::on_loginButton_clicked()
 void AuthDialog::on_languageCombo_currentIndexChanged(int index)
 {
     QString lang = (index == 0) ? "ru_RU" : "en_US";
-    translator.load("diplome_" + lang + ".qm");
-    updateUI();
+    if (translator.load("diplome_" + lang + ".qm")) {
+        updateUI();
+    }
 }
 
 void AuthDialog::loadTranslations()
@@ -75,6 +76,7 @@ void AuthDialog::loadTranslations()
     ui->languageCombo->addItem("English");
     translator.load("diplome_ru_RU.qm");
     qApp->installTranslator(&translator);
+
 }
 
 void AuthDialog::updateUI()
@@ -86,6 +88,4 @@ void AuthDialog::updateUI()
 void AuthDialog::checkCapsLock()
 {
     bool capsLockOn = (QGuiApplication::keyboardModifiers() & Qt::Key_CapsLock);
-    ui->capsLockLabel->setVisible(capsLockOn);
-    ui->capsLockLabel->setText(capsLockOn ? tr("Caps Lock is ON") : "");
 }

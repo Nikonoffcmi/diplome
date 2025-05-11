@@ -111,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
             });
 
     setupMenu();
+    ui->retranslateUi(this);
 }
 
 MainWindow::~MainWindow()
@@ -286,16 +287,6 @@ void MainWindow::setupMenu() {
     connect(exitAction, &QAction::triggered, this, &QMainWindow::close);
 
 
-    QMenu *reportMenu = menuBar->addMenu(tr("Отчет"));
-    QAction *pdfAction = new QAction(tr("формат pdf"), this);
-    QAction *htmlAction = new QAction(tr("Редактировать HTML"), this);
-
-    reportMenu->addAction(pdfAction);
-    reportMenu->addAction(htmlAction);
-
-    connect(pdfAction, &QAction::triggered, this, &MainWindow::on_actionReportPDFTriggered);
-    connect(htmlAction, &QAction::triggered, this, &MainWindow::on_actionHTMLTriggered);
-
 
     QMenu *booksMenu = menuBar->addMenu(tr("Справочники"));
     QAction *EmployeeAction = new QAction(tr("Сотрудники"), this);
@@ -318,6 +309,16 @@ void MainWindow::setupMenu() {
     connect(productAction, &QAction::triggered, this, &MainWindow::on_actionProductTriggered);
     connect(deviceAction, &QAction::triggered, this, &MainWindow::on_actionDeviceTriggered);
 
+
+    QMenu *reportMenu = menuBar->addMenu(tr("Отчет"));
+    QAction *pdfAction = new QAction(tr("формат pdf"), this);
+    QAction *htmlAction = new QAction(tr("Редактировать HTML"), this);
+
+    reportMenu->addAction(pdfAction);
+    reportMenu->addAction(htmlAction);
+
+    connect(pdfAction, &QAction::triggered, this, &MainWindow::on_actionReportPDFTriggered);
+    connect(htmlAction, &QAction::triggered, this, &MainWindow::on_actionHTMLTriggered);
 
 
 
