@@ -98,6 +98,12 @@ void MeasurementDeviceForm::setupCharacteristicsTab() {
     model->setRelation(1, QSqlRelation("measuring_value", "id_measuring_value", "name"));
     model->select();
 
+    model->setHeaderData(1, Qt::Horizontal, "Название");
+    model->setHeaderData(2, Qt::Horizontal, "Вверхний диапозон измерений");
+    model->setHeaderData(3, Qt::Horizontal, "Нижний диапозон измерений");
+    model->setHeaderData(4, Qt::Horizontal, "Погрешность измерения");
+    model->setHeaderData(5, Qt::Horizontal, "Запись в JSON");
+
     QTableView *view = new QTableView;
     view->setModel(model);
     view->setColumnHidden(0, true);
@@ -115,6 +121,11 @@ void MeasurementDeviceForm::setupDeviceModelTab() {
     model->setRelation(2, QSqlRelation("manufacturer", "id_manufacturer", "name"));
     model->setRelation(4, QSqlRelation("measurement_characteristics", "id_measurement_characteristics", "error_rate"));
     model->select();
+
+    model->setHeaderData(1, Qt::Horizontal, "Название");
+    model->setHeaderData(2, Qt::Horizontal, "Производитель");
+    model->setHeaderData(3, Qt::Horizontal, "Вес");
+    model->setHeaderData(4, Qt::Horizontal, "Погрешность измерения");
 
     QTableView *view = new QTableView;
     view->setModel(model);

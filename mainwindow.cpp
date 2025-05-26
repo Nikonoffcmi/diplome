@@ -315,7 +315,6 @@ void MainWindow::setupMenu() {
     QAction *htmlAction = new QAction(tr("Редактировать HTML"), this);
 
     reportMenu->addAction(pdfAction);
-    reportMenu->addAction(htmlAction);
 
     connect(pdfAction, &QAction::triggered, this, &MainWindow::on_actionReportPDFTriggered);
     connect(htmlAction, &QAction::triggered, this, &MainWindow::on_actionHTMLTriggered);

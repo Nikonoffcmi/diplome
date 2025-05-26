@@ -29,6 +29,8 @@ class ReportCreate : public QDialog
 
 public:
     explicit ReportCreate(QWidget *parent = nullptr);
+    QString generateReport(int productId);
+
     ~ReportCreate();
 
 private:
@@ -42,6 +44,9 @@ private:
     void printPdf();
     void generateHtmlPreview(int productId);
     void saveEditedPdf();
+    QString loadTemplate();
+    QString replacePlaceholders(const QString &templateHtml, int productId);
+    QString getBatchNumber(int batchId);
 };
 
 #endif // REPORTCREATE_H

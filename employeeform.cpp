@@ -127,11 +127,16 @@ void EmployeeForm::setupEmployeeTab(QWidget *tab) {
     model->setHeaderData(7, Qt::Horizontal, "Пароль");
     model->setHeaderData(8, Qt::Horizontal, "Админ");
 
+
     view = new QTableView;
     view->setModel(model);
 
     // Скрываем колонку с ID
     view->setColumnHidden(0, true);
+
+    view->setColumnHidden(6, true);
+    view->setColumnHidden(7, true);
+    view->setColumnHidden(8, true);
 
     // Настраиваем делегаты
     view->setItemDelegateForColumn(4, new QSqlRelationalDelegate(view)); // Для подразделения
@@ -149,6 +154,8 @@ void EmployeeForm::setupEmployeeTab(QWidget *tab) {
         }
     };
     view->setItemDelegateForColumn(7, new PasswordDelegate());
+
+    view->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     layout->addWidget(view);
 
